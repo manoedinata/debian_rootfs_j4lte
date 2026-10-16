@@ -1,0 +1,9 @@
+obj-m += j4cam.o
+j4cam-y := j4cam_main.o j4cam_vmalloc.o
+
+# same include paths as the FIMC-IS2 driver, so we can see its video context
+FIMC := drivers/media/platform/exynos/fimc-is2
+ccflags-y += -I$(srctree)/$(FIMC) -I$(srctree)/$(FIMC)/include -I$(srctree)/$(FIMC)/interface \
+	-I$(srctree)/$(FIMC)/hardware -I$(srctree)/$(FIMC)/hardware/api -I$(srctree)/$(FIMC)/vendor \
+	-I$(srctree)/$(FIMC)/sensor/csi -I$(srctree)/$(FIMC)/ischain/fimc-is-v3_20_0 \
+	-I$(srctree)/$(FIMC)/vendor/mcd

@@ -1,0 +1,18 @@
+[Unit]
+Description=J4 camera V4L2 driver (j4cam: /dev/video22 rear, /dev/video23 front)
+# The firmware (fimc_is_lib.bin, setfile_*.bin) lives on the stock VENDOR
+# partition, which the initramfs already mounted; make sure systemd agrees.
+RequiresMountsFor=/vendor
+After=local-fs.target systemd-udevd.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# built out of tree for this kernel (see build_j4cam.sh). Parameters: pub_w/pub_h
+# (published size after rotation, default 480x640), rear_rot/front_rot (0/90/180/270,
+# defaults 90/270), rear_nr/front_nr (video node numbers, defaults 22/23)
+ExecStart=/sbin/insmod /usr/local/lib/j4cam/j4cam.ko
+ExecStop=/sbin/rmmod j4cam
+
+[Install]
+WantedBy=multi-user.target
