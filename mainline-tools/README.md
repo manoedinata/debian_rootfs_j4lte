@@ -34,6 +34,6 @@ RECOVERY partition and are booted with `reboot recovery`.
     BOOTARGS_REMOVE="j4.autoreboot=45" ./pack.sh   # untimed; add BOOTARGS_EXTRA="j4.bootreboot=180" for risky changes
     ./test-mainline.sh flash && ./test-mainline.sh reboot
     # SSH to root@172.16.42.1 works while mainline runs; `ssh root@172.16.42.1 reboot`
-    # returns to the downstream Debian, /root/j4-diag-*.txt and `journalctl -b -1` hold the logs
+    # returns to the downstream Debian; `journalctl -b -1` holds the logs
 
 `pylib/` (reedsolo) is not tracked: `pip install --target mainline-tools/pylib reedsolo`.
