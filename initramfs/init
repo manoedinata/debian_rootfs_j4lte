@@ -10,8 +10,72 @@ log() {
 	echo "init: $1" >/dev/console 2>/dev/null
 }
 
+# j4.autoreboot=<seconds> on the kernel command line (mainline test images):
+# reboot instead of idling in the rescue shell, so a test boot ends by itself
+# and the log can be read from the next (Debian) boot's ramoops.
+mount -t proc proc /proc
+autoreboot=""
+wtest=""
+bootreboot=""
+diag=""
+for arg in $(cat /proc/cmdline 2>/dev/null); do
+	case "$arg" in
+		j4.autoreboot=*) autoreboot="${arg#j4.autoreboot=}" ;;
+		j4.wtest=*)      wtest="${arg#j4.wtest=}" ;;
+		j4.bootreboot=*) bootreboot="${arg#j4.bootreboot=}" ;;
+		j4.diag=*)       diag="${arg#j4.diag=}" ;;
+	esac
+done
+
+# j4.wtest=<offset_MiB>:<size_MiB>: eMMC write-path test, only ever on USERDATA
+# (mmcblk0p25, a fresh unused ext4). Writes random data, fsyncs, drops the
+# caches, reads it back and compares hashes; the hash is logged so a later boot
+# with another kernel can verify the same region.
+write_test() {
+	dev=/dev/mmcblk0p25
+	off=${wtest%%:*}
+	size=${wtest##*:}
+	if [ -z "$off" ] || [ -z "$size" ] || [ "$off" -lt 1024 ] || [ "$size" -lt 1 ] || [ "$size" -gt 64 ]; then
+		log "wtest: refusing offset=$off size=$size (need offset>=1024 MiB, 1<=size<=64 MiB)"
+		return
+	fi
+	dev_bytes=$(blockdev --getsize64 "$dev" 2>/dev/null)
+	if [ -z "$dev_bytes" ] || [ $(( (off + size) * 1048576 )) -gt "$dev_bytes" ]; then
+		log "wtest: $dev too small or missing ($dev_bytes bytes)"
+		return
+	fi
+	log "wtest: $dev offset ${off} MiB size ${size} MiB"
+	dd if=/dev/urandom of=/wtest.pat bs=1M count="$size" 2>/dev/null
+	want=$(sha256sum /wtest.pat | cut -d' ' -f1)
+	t0=$(date +%s)
+	dd if=/wtest.pat of="$dev" bs=1M seek="$off" conv=fsync 2>/dev/null
+	sync
+	t1=$(date +%s)
+	echo 3 >/proc/sys/vm/drop_caches
+	blockdev --flushbufs "$dev"
+	got=$(dd if="$dev" bs=1M skip="$off" count="$size" 2>/dev/null | sha256sum | cut -d' ' -f1)
+	t2=$(date +%s)
+	log "wtest: want $want"
+	log "wtest: got  $got"
+	if [ "$want" = "$got" ]; then
+		log "wtest: RESULT OK (write $((t1 - t0))s, read $((t2 - t1))s)"
+	else
+		log "wtest: RESULT MISMATCH"
+	fi
+	rm -f /wtest.pat
+}
+
 rescue_shell() {
 	log "$1"
+	if [ -n "$autoreboot" ]; then
+		log "autoreboot in ${autoreboot}s"
+		sleep "$autoreboot"
+		[ -n "$diag" ] && diag_save
+		sync
+		log "rebooting now"
+		reboot -f
+		log "reboot -f returned, falling back to the rescue shell"
+	fi
 	log "Dropping to rescue shell."
 	# A one-shot "exec sh" dies the instant stdin has no interactive
 	# source (no serial/USB console attached yet) - sh hits EOF, exits
@@ -23,10 +87,138 @@ rescue_shell() {
 	done
 }
 
-mount -t proc proc /proc
 mount -t sysfs sysfs /sys
 mount -t devtmpfs devtmpfs /dev || rescue_shell "Failed to mount devtmpfs."
 log "devtmpfs mounted"
+
+# Mainline bring-up safety net: make the next reset of any kind (even a held
+# power button during a hang) boot BOOT instead of RECOVERY. INFORM3 (PMU_ALIVE
+# + 0x80c) holds the boot reason; 0x12345670 = normal. /dev/mem only exists on
+# the mainline kernel, so this is a no-op on the downstream one.
+[ -c /dev/mem ] && devmem 0x11c8080c 32 0x12345670 2>/dev/null && log "INFORM3 set to normal boot"
+
+# Mainline: dump the common clock tree to the kernel log (and thus ramoops) so
+# rates/parents can be checked on the real hardware. Not present on the
+# downstream 3.18 kernel.
+if mount -t debugfs debugfs /sys/kernel/debug 2>/dev/null && [ -r /sys/kernel/debug/clk/clk_summary ]; then
+	while IFS= read -r line; do
+		echo "clk: $line" >/dev/kmsg 2>/dev/null
+	done </sys/kernel/debug/clk/clk_summary
+fi
+
+# Mainline kernel: the same RNDIS network device (rndis0, same MAC addresses as
+# the downstream gadget so the host keeps its interface name and DHCP setup)
+# through the upstream configfs gadget framework.
+setup_usb_configfs() {
+	if ! mount -t configfs configfs /sys/kernel/config 2>/dev/null; then
+		log "no android_usb gadget and no configfs, skipping USB network setup"
+		return
+	fi
+	i=0
+	while [ -z "$(ls /sys/class/udc 2>/dev/null)" ] && [ "$i" -lt 20 ]; do
+		sleep 0.5
+		i=$((i + 1))
+	done
+	udc=$(ls /sys/class/udc 2>/dev/null | head -n 1)
+	if [ -z "$udc" ]; then
+		log "no UDC registered, skipping USB network setup"
+		return
+	fi
+	g=/sys/kernel/config/usb_gadget/j4
+	mkdir -p "$g/strings/0x409" "$g/configs/c.1/strings/0x409" "$g/functions/rndis.usb0" || return
+	echo 0x18d1 >"$g/idVendor"
+	echo 0xd001 >"$g/idProduct"
+	echo "j4lte" >"$g/strings/0x409/serialnumber"
+	echo "Samsung" >"$g/strings/0x409/manufacturer"
+	echo "Galaxy J4 (mainline)" >"$g/strings/0x409/product"
+	echo "RNDIS" >"$g/configs/c.1/strings/0x409/configuration"
+	# upstream names the device side "usb0"; the installed system (unudhcpd.service)
+	# is bound to rndis0, the name the downstream android_usb gadget used
+	# (the kernel insists on exactly one %d and rejects a plain "rndis0")
+	echo 'rndis%d' >"$g/functions/rndis.usb0/ifname" 2>/dev/null || log "USB gadget: setting ifname FAILED"
+	echo 7a:50:b5:6f:88:a3 >"$g/functions/rndis.usb0/dev_addr"
+	echo 52:d8:64:70:20:45 >"$g/functions/rndis.usb0/host_addr"
+	ln -s "$g/functions/rndis.usb0" "$g/configs/c.1/rndis.usb0"
+	[ -n "$diag" ] && trace_on
+	if echo "$udc" >"$g/UDC" 2>/dev/null; then
+		log "USB gadget (rndis0) bound to UDC $udc"
+	else
+		log "USB gadget: binding to UDC $udc FAILED"
+	fi
+	usb_diag
+}
+
+# j4.diag=1 (mainline USB bring-up): dwc3 trace events from before the gadget is
+# bound, and a full state dump saved at the end of the test boot into the free
+# space of USERDATA (raw, at 21600 MiB, past the write-test area) because the
+# kernel log records are too small for it. Read it back from another kernel:
+#   dd if=/dev/mmcblk0p25 bs=1M skip=21600 count=8 | head -c <size from first line>
+tracedir() {
+	for t in /sys/kernel/tracing /sys/kernel/debug/tracing; do
+		[ -d "$t/events" ] && { echo "$t"; return; }
+	done
+}
+
+trace_on() {
+	t=$(tracedir)
+	[ -z "$t" ] && mount -t tracefs tracefs /sys/kernel/tracing 2>/dev/null && t=/sys/kernel/tracing
+	[ -z "$t" ] && return
+	echo 4096 >"$t/buffer_size_kb" 2>/dev/null
+	echo 1 >"$t/events/dwc3/enable" 2>/dev/null && log "diag: dwc3 trace events on ($t)"
+}
+
+diag_save() {
+	dev=/dev/mmcblk0p25
+	d=/sys/kernel/debug/usb/13600000.usb
+	{
+		echo "== uptime $(cut -d' ' -f1 /proc/uptime)"
+		for f in /sys/class/udc/*/state /sys/class/udc/*/current_speed /sys/class/udc/*/is_selfpowered; do echo "$f: $(cat "$f" 2>&1)"; done
+		echo "== gadget UDC: $(cat /sys/kernel/config/usb_gadget/j4/UDC 2>&1)"
+		echo "== $d: $(ls "$d" 2>&1 | tr '\n' ' ')"
+		echo "== regdump"; cat "$d/regdump" 2>&1
+		echo "== link_state: $(cat "$d/link_state" 2>&1)"
+		for e in "$d"/ep*; do
+			echo "== $e"
+			for f in "$e"/*; do echo "-- $f"; head -n 60 "$f" 2>&1; done
+		done
+		echo "== net"; ip -s link show rndis0 2>&1; cat /sys/class/net/rndis0/carrier 2>&1
+		echo "== cmu/pmu"; for a in 0x13730230 0x13730630 0x13730828 0x13730830 0x1373083c 0x13731000 0x13731004 0x11c80704; do echo "$a=$(devmem $a 32 2>&1)"; done
+		echo "== phy"; for a in 0x135c0004 0x135c0008 0x135c0010 0x135c001c 0x135c0054 0x135c0070; do echo "$a=$(devmem $a 32 2>&1)"; done
+		echo "== clk_summary (usb)"; grep -E "usb20drd|wpll|usb_pll" /sys/kernel/debug/clk/clk_summary 2>&1
+		echo "== dmesg"; dmesg
+		t=$(tracedir)
+		[ -n "$t" ] && { echo "== trace"; head -c 3500000 "$t/trace"; }
+	} >/diag.txt 2>&1
+	n=$(wc -c </diag.txt)
+	log "diag: saving $n bytes of state to $dev @21600 MiB"
+	( echo "J4DIAG $n"; cat /diag.txt ) | head -c 6291456 | dd of="$dev" bs=1M seek=21600 conv=fsync 2>/dev/null
+	log "diag: saved"
+}
+
+# Mainline USB bring-up: report what the hardware looks like. Only registers that
+# are defined (a CMU hole stalls the bus); the PHY/controller are read after the
+# dwc3 debugfs dump has woken the controller.
+usb_diag() {
+	[ -c /dev/mem ] || return
+	log "usbdiag: udc state: $(cat /sys/class/udc/*/state 2>&1) | UDC=$(cat /sys/kernel/config/usb_gadget/j4/UDC 2>&1)"
+	r=""
+	for a in 0x13730230 0x13730630 0x13730828 0x13730830 0x1373083c 0x13731000 0x13731004 0x11c80704 0x11c87824; do
+		r="$r $a=$(devmem $a 32 2>&1)"
+	done
+	log "usbdiag: cmu/pmu:$r"
+	if [ -r /sys/kernel/debug/usb/13600000.usb/regdump ]; then
+		d=$(cat /sys/kernel/debug/usb/13600000.usb/regdump 2>&1 | grep -E "GSNPSID|GCTL|GUSB2PHYCFG|GUSB3PIPECTL|DCFG|DCTL|DEVTEN|DSTS|GSTS|GHWPARAMS3|GHWPARAMS0|GUCTL" | tr -s ' \n' ' ')
+		log "usbdiag: dwc3: $d"
+	else
+		log "usbdiag: no dwc3 regdump ($(ls /sys/kernel/debug/usb 2>&1 | tr '\n' ' '))"
+	fi
+	r=""
+	for a in 0x135c0004 0x135c0008 0x135c0010 0x135c0054 0x135c0070; do
+		r="$r $a=$(devmem $a 32 2>&1)"
+	done
+	log "usbdiag: phy:$r"
+	grep -E "usb20drd|wpll|usb_pll" /sys/kernel/debug/clk/clk_summary 2>/dev/null | while IFS= read -r l; do log "usbdiag: clk $l"; done
+}
 
 setup_usb_network() {
 	# This kernel builds the Samsung/AOSP downstream "android_usb"
@@ -38,7 +230,7 @@ setup_usb_network() {
 	# build doesn't have USB_G_ANDROID either.
 	sysfs_dir=/sys/class/android_usb/android0
 	if [ ! -e "$sysfs_dir" ]; then
-		log "no android_usb gadget, skipping USB network setup"
+		setup_usb_configfs
 		return
 	fi
 
@@ -55,11 +247,11 @@ setup_usb_network() {
 }
 setup_usb_network
 
-# Default root is USERDATA (mmcblk0p25); SYSTEM (mmcblk0p18) is the fallback
-# if USERDATA does not mount (e.g. it still holds Android's data partition).
-# An explicit root= on the kernel cmdline disables the fallback.
-root=/dev/mmcblk0p25
-fallback_root=/dev/mmcblk0p18
+# Root is SYSTEM (mmcblk0p18), flashed from misc-files/system.img (see
+# build_system_img.sh). USERDATA is left alone for Android's /data.
+# An explicit root= on the kernel cmdline overrides this.
+root=/dev/mmcblk0p18
+fallback_root=""
 rootfstype=ext4
 rootflags=rw
 init=/sbin/init
@@ -102,6 +294,10 @@ else
 	rescue_shell "Timed out waiting for root device: $root"
 fi
 
+# Test boots (j4.autoreboot): mount read-only, report and reboot instead of
+# handing over to the installed system.
+[ -n "$autoreboot" ] && rootflags=ro
+
 mkdir -p /mnt/root
 if mount -t "$rootfstype" -o "$rootflags" "$root" /mnt/root; then
 	log "mounted $root ($rootfstype) on /mnt/root"
@@ -111,6 +307,16 @@ elif [ -n "$fallback_root" ] && [ -e "$fallback_root" ] &&
 	root="$fallback_root"
 else
 	rescue_shell "Failed to mount $root as $rootfstype on /mnt/root."
+fi
+
+if [ -n "$autoreboot" ]; then
+	log "test boot: root $root mounted ($rootflags), not switching root"
+	log "root dir: $(ls /mnt/root 2>&1 | tr '\n' ' ')"
+	log "os-release: $(head -n 2 /mnt/root/etc/os-release 2>&1 | tr '\n' ' ')"
+	log "/proc/partitions: $(cat /proc/partitions 2>&1)"
+	umount /mnt/root
+	[ -n "$wtest" ] && write_test
+	rescue_shell "test boot done"
 fi
 
 for d in proc sys dev run; do
@@ -136,6 +342,44 @@ fi
 # error) for *any* failed precondition, including "not PID 1" or "NEW_ROOT
 # not a mountpoint" - not just a wrong arg count. Log both directly so we
 # can tell which one it actually is instead of guessing from the help text.
+# j4.bootreboot=<seconds>: bring-up boots of the installed system on a kernel
+# that cannot be interacted with yet. A timer started inside the new root (the
+# chroot sees the same filesystem as PID 1 after switch_root) syncs, remounts
+# everything read-only and reboots through SysRq, whatever state systemd is in.
+# INFORM3 was already set to "normal boot" above, so the reboot lands in BOOT.
+if [ -n "$bootreboot" ]; then
+	log "bootreboot: sysrq sync/ro/reboot in ${bootreboot}s"
+	# With j4.diag the timer also writes what the USB gadget/network look like to
+	# /root/j4-diag-N.txt (text, from inside the installed system) at 45 s and
+	# 150 s, since there is no way in yet.
+	script=$(cat <<'EOS'
+collect() {
+	{
+		echo "== uptime $(cut -d' ' -f1 /proc/uptime)"
+		echo "== links"; ip -br link; ip -br addr
+		echo "== udc"; cat /sys/class/udc/*/state /sys/class/udc/*/current_speed
+		echo "== unudhcpd"; systemctl status unudhcpd --no-pager 2>&1 | head -15
+		echo "== net stats"; ip -s link
+		d=/sys/kernel/debug/usb/13600000.usb
+		echo "== dwc3 regs"; grep -E "GSTS|DSTS|DCTL|DCFG|GCTL|GUSB2PHYCFG" $d/regdump
+		for e in ep1in ep1out ep2in; do echo "-- $e: $(cat $d/$e/transfer_type)"; head -n 10 $d/$e/trb_ring; done
+		echo "== kernel usb lines"; dmesg | grep -iE "dwc3|rndis|usb|gadget|udc|phy"
+		echo "== journal rndis"; journalctl -b --no-pager 2>/dev/null | grep -iE "rndis|usb0|unudhcpd|enx" | tail -25
+	} > "$1" 2>&1
+}
+n=$1
+if [ "$2" = 1 ]; then
+	sleep 45; collect /root/j4-diag-1.txt
+	sleep 105; collect /root/j4-diag-2.txt
+	n=$((n - 150))
+fi
+[ "$n" -gt 0 ] && sleep "$n"
+echo s >/proc/sysrq-trigger; sleep 3; echo u >/proc/sysrq-trigger; sleep 2; echo b >/proc/sysrq-trigger
+EOS
+)
+	( chroot /mnt/root /bin/sh -c "$script" j4 "$bootreboot" "${diag:-0}" >/dev/null 2>&1 & )
+fi
+
 log "pid=$$ /proc/mounts: $(cat /proc/mounts 2>&1)"
 log "switch_root /mnt/root $init"
 
