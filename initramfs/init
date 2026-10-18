@@ -15,6 +15,8 @@ log() {
 # and the log can be read from the next (Debian) boot's ramoops.
 mount -t proc proc /proc
 autoreboot=""
+initwdt=60
+rescue=""
 wtest=""
 bootreboot=""
 for arg in $(cat /proc/cmdline 2>/dev/null); do
@@ -22,8 +24,22 @@ for arg in $(cat /proc/cmdline 2>/dev/null); do
 		j4.autoreboot=*) autoreboot="${arg#j4.autoreboot=}" ;;
 		j4.wtest=*)      wtest="${arg#j4.wtest=}" ;;
 		j4.bootreboot=*) bootreboot="${arg#j4.bootreboot=}" ;;
+		j4.initwdt=*)    initwdt="${arg#j4.initwdt=}" ;;
+		j4.rescue=*)     rescue="${arg#j4.rescue=}" ;;
 	esac
 done
+
+# Boot watchdog: a boot that has not reached switch_root after j4.initwdt seconds
+# (60 by default, 0 turns it off) is reset. INFORM3 is set to "normal boot" below,
+# so the reset lands in BOOT. A kernel whose eMMC hangs during the root mount
+# would otherwise leave the phone stuck here for good.
+wdt_pid=""
+if [ "$initwdt" -gt 0 ] 2>/dev/null; then
+	( sleep "$initwdt"
+	  echo "init: boot watchdog: no switch_root after ${initwdt}s, resetting" >/dev/kmsg 2>/dev/null
+	  reboot -f ) &
+	wdt_pid=$!
+fi
 
 # j4.wtest=<offset_MiB>:<size_MiB>: eMMC write-path test, only ever on USERDATA
 # (mmcblk0p25, a fresh unused ext4). Writes random data, fsyncs, drops the
@@ -65,6 +81,8 @@ write_test() {
 
 rescue_shell() {
 	log "$1"
+	# the shell and the test boot timer below set their own pace
+	[ -n "$wdt_pid" ] && kill "$wdt_pid" 2>/dev/null
 	if [ -n "$autoreboot" ]; then
 		log "autoreboot in ${autoreboot}s"
 		sleep "$autoreboot"
@@ -72,6 +90,13 @@ rescue_shell() {
 		log "rebooting now"
 		reboot -f
 		log "reboot -f returned, falling back to the rescue shell"
+	fi
+	# Without a keyboard the shell is of no use, and a software reset lands in BOOT
+	# (INFORM3 is "normal boot"), so leave unless j4.rescue=1 asks for the shell.
+	if [ "$rescue" != 1 ]; then
+		log "rebooting in 30s (j4.rescue=1 keeps the rescue shell)"
+		sleep 30
+		reboot -f
 	fi
 	log "Dropping to rescue shell."
 	# A one-shot "exec sh" dies the instant stdin has no interactive
@@ -277,6 +302,7 @@ EOS
 	( chroot /mnt/root /bin/sh -c "$script" j4 "$bootreboot" >/dev/null 2>&1 & )
 fi
 
+[ -n "$wdt_pid" ] && kill "$wdt_pid" 2>/dev/null
 log "switch_root /mnt/root $init"
 
 exec switch_root /mnt/root "$init"
