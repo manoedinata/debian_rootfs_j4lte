@@ -49,6 +49,9 @@ m += [
     ('gate', 'MIF_GATE_CLK_MIF_UID_PDMA_MIF_IPCLKPORT_ACLK_PDMA0', 'gout_mif_pdma0_aclk', 'rate'),
     ('gate', 'MIF_GATE_CLK_MIF_UID_SPEEDY_MIF_IPCLKPORT_PCLK', 'gout_mif_speedy_pclk', 'rate'),
     ('gate', 'MIF_GATE_CLK_MIF_UID_SPEEDY_MIF_IPCLKPORT_CLK', 'gout_mif_speedy_clk', 'rate'),
+    ('gate', 'MIF_GATE_CLK_MIF_UID_WRAP_ADC_IF_IPCLKPORT_PCLK_S0', 'gout_mif_adc_pclk_s0', 'rate'),
+    ('gate', 'MIF_GATE_CLK_MIF_UID_WRAP_ADC_IF_IPCLKPORT_PCLK_S1', 'gout_mif_adc_pclk_s1', 'crit'),
+    ('gate', 'MIF_GATE_CLK_MIF_UID_WRAP_ADC_IF_IPCLKPORT_I_OSC_SYS', 'gout_mif_adc_osc_sys', ''),
     ('gate', 'MIF_GATE_CLK_MIF_UID_GPIO_MIF_IPCLKPORT_PCLK', 'gout_mif_gpio_pclk', 'crit'),
     ('gate', 'MIF_GATE_CLK_MIF_UID_SYSREG_MIF_IPCLKPORT_PCLK', 'gout_mif_sysreg_pclk', 'crit'),
 ]
