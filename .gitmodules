@@ -11,3 +11,6 @@
 [submodule "fbkeyboard"]
 	path = fbkeyboard
 	url = https://github.com/manoedinata/fbkeyboard.git
+[submodule "uniLoader"]
+	path = uniLoader
+	url = https://github.com/manoedinata/uniLoader

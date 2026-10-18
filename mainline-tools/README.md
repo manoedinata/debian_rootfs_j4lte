@@ -20,10 +20,10 @@ RECOVERY partition and are booted with `reboot recovery`.
 
 ## Rules learned the hard way
 
-- **Every mainline image must end by itself.** Use `BOOTARGS_EXTRA="j4.bootreboot=180"`
-  (or `j4.autoreboot=N` for the read-only test mode). A held power button does not
-  reliably leave RECOVERY, so an untimed image can strand the phone until TWRP is
-  flashed again.
+- **Untimed images are fine while SSH over the RNDIS gadget works**: leave with
+  `ssh root@172.16.42.1 reboot` (init arms INFORM3=normal, so it lands in the downstream
+  Debian). If a change could break USB/SSH, add `BOOTARGS_EXTRA="j4.bootreboot=180"`:
+  a held power button does not reliably leave RECOVERY, and a stranded phone needs TWRP.
 - Read device registers from the downstream kernel only at *defined* offsets: a hole
   in a CMU stalls the bus.
 - S-BOOT zeroes `0x7e280000-0x7e2fffff` at every boot, so ramoops stays below it.
@@ -31,9 +31,9 @@ RECOVERY partition and are booted with `reboot recovery`.
 
 ## Typical loop
 
-    BOOTARGS_REMOVE="j4.autoreboot=45" BOOTARGS_EXTRA="j4.bootreboot=180 j4.diag=1" ./pack.sh
+    BOOTARGS_REMOVE="j4.autoreboot=45" ./pack.sh   # untimed; add BOOTARGS_EXTRA="j4.bootreboot=180" for risky changes
     ./test-mainline.sh flash && ./test-mainline.sh reboot
-    # SSH to root@172.16.42.1 works while mainline runs; the phone returns to the
-    # downstream Debian by itself, /root/j4-diag-*.txt and `journalctl -b -1` hold the logs
+    # SSH to root@172.16.42.1 works while mainline runs; `ssh root@172.16.42.1 reboot`
+    # returns to the downstream Debian, /root/j4-diag-*.txt and `journalctl -b -1` hold the logs
 
 `pylib/` (reedsolo) is not tracked: `pip install --target mainline-tools/pylib reedsolo`.
