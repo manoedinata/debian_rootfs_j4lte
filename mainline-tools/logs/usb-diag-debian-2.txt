@@ -1,0 +1,133 @@
+== uptime 153.13
+== links
+lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> 
+usb0             DOWN           7a:50:b5:6f:88:a3 <BROADCAST,MULTICAST> 
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+usb0             DOWN           
+== udc
+configured
+high-speed
+== unudhcpd
+● unudhcpd.service - unudhcpd DHCP server for the USB (rndis0) tether interface
+     Loaded: loaded (/etc/systemd/system/unudhcpd.service; enabled; vendor preset: enabled)
+     Active: inactive (dead)
+== net stats
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    RX: bytes  packets  errors  dropped missed  mcast   
+    30800      400      0       0       0       0       
+    TX: bytes  packets  errors  dropped carrier collsns 
+    30800      400      0       0       0       0       
+2: usb0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/ether 7a:50:b5:6f:88:a3 brd ff:ff:ff:ff:ff:ff
+    RX: bytes  packets  errors  dropped missed  mcast   
+    0          0        0       0       0       0       
+    TX: bytes  packets  errors  dropped carrier collsns 
+    0          0        0       0       0       0       
+== dwc3 regs
+GCTL = 0x30c12004
+GSTS = 0x3e800000
+GUSB2PHYCFG(0) = 0x40102540
+GUSB2PHYCFG(1) = 0x00000000
+GUSB2PHYCFG(2) = 0x00000000
+GUSB2PHYCFG(3) = 0x00000000
+GUSB2PHYCFG(4) = 0x00000000
+GUSB2PHYCFG(5) = 0x00000000
+GUSB2PHYCFG(6) = 0x00000000
+GUSB2PHYCFG(7) = 0x00000000
+GUSB2PHYCFG(8) = 0x00000000
+GUSB2PHYCFG(9) = 0x00000000
+GUSB2PHYCFG(10) = 0x00000000
+GUSB2PHYCFG(11) = 0x00000000
+GUSB2PHYCFG(12) = 0x00000000
+GUSB2PHYCFG(13) = 0x00000000
+GUSB2PHYCFG(14) = 0x00000000
+GUSB2PHYCFG(15) = 0x00000000
+DCFG = 0x00a00870
+DCTL = 0x80f00a00
+DSTS = 0x00823fd0
+-- ep1in: bulk
+buffer_addr,size,type,ioc,isp_imi,csp,chn,lst,hwo
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0       ED
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+-- ep1out: bulk
+buffer_addr,size,type,ioc,isp_imi,csp,chn,lst,hwo
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0       ED
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+-- ep2in: interrupt
+buffer_addr,size,type,ioc,isp_imi,csp,chn,lst,hwo
+0000000041cc0718,0,normal,1,0,0,0,0,0         
+0000000041cc0718,0,normal,1,0,0,0,0,0         
+0000000041cc0718,0,normal,1,0,0,0,0,0         
+0000000041cc0718,0,normal,1,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0       ED
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+0000000000000000,0,UNKNOWN,0,0,0,0,0,0         
+== kernel usb lines
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
+[    0.216304] usbcore: registered new interface driver usbfs
+[    0.216405] usbcore: registered new interface driver hub
+[    0.216599] usbcore: registered new device driver usb
+[    0.244596] exynos5_usb3drd_phy 135c0000.phy: supply vbus not found, using dummy regulator
+[    0.244849] exynos5_usb3drd_phy 135c0000.phy: supply vbus-boost not found, using dummy regulator
+[    0.298437] exynos-dwc3 soc@0:usb@13600000: supply vdd10 not found, using dummy regulator
+[    0.302843] usbcore: registered new interface driver usb-storage
+[    0.309213] usbcore: registered new interface driver usbhid
+[    0.309331] usbhid: USB HID core driver
+[    1.209077] clk:  frat_fsys_usb20drd_phyclock         1       1        0        60000000    0          0     50000      Y   deviceless                      no_connection_id         
+[    1.215104] clk:     mout_fsys_usb20drd_phyclock_user 1       1        0        60000000    0          0     50000      Y      deviceless                      no_connection_id         
+[    1.221072] clk:        gout_fsys_usb20drd_phyclock   1       1        0        60000000    0          0     50000      Y         135c0000.phy                    phy                      
+[    1.250291] clk:     fout_fsys_wpll_usb               1       1        0        20000000    0          0     50000      Y      deviceless                      no_connection_id         
+[    1.256089] clk:        gout_fsys_usb20drd_clkcore    1       1        0        20000000    0          0     50000      Y         135c0000.phy                    ref                      
+[    1.391455] clk:              mout_mif_cmu_fsys_usb20drd_refclk 1       1        0        666250000   0          0     50000      Y               deviceless                      no_connection_id         
+[    1.397170] clk:                 dout_mif_cmu_fsys_usb20drd_refclk 1       1        0        66625000    0          0     50000      Y                  deviceless                      no_connection_id         
+[    1.402831] clk:                    gout_mif_cmu_fsys_usb20drd_refclk 1       1        0        66625000    0          0     50000      Y                     deviceless                      no_connection_id         
+[    1.408587] clk:                       gout_fsys_usb20drd_ref_clk 1       1        0        66625000    0          0     50000      Y                        soc@0:usb@13600000              ref                      
+[    1.768857] clk:                       gout_fsys_usb20drd_aclk_hsdrd 1       1        0        276250000   0          0     50000      Y                        soc@0:usb@13600000              bus_early                
+[    1.780784] clk:                       gout_fsys_usb20drd_hclk_ctrl 1       1        0        276250000   0          0     50000      Y                        soc@0:usb@13600000              ctrl                     
+[    1.909129] init: diag: dwc3 trace events on (/sys/kernel/debug/tracing)
+[    1.917629] configfs-gadget.j4 gadget.0: HOST MAC 52:d8:64:70:20:45
+[    1.919368] configfs-gadget.j4 gadget.0: MAC 7a:50:b5:6f:88:a3
+[    1.924153] init: USB gadget (rndis0) bound to UDC 13600000.usb
+[    1.932736] init: usbdiag: udc state: not attached | UDC=13600000.usb
+[    1.953046] init: usbdiag: cmu/pmu: 0x13730230=0x00201000 0x13730630=0x00002000 0x13730828=0x00000001 0x13730830=0x00000001 0x1373083c=0x00000001 0x13731000=0x00000000 0x13731004=0x00000007 0x11c80704=0x00000002 0x11c87824=0x80060001
+[    2.006602] init: usbdiag: phy: 0x135c0004=0x080001C0 0x135c0008=0x00001660 0x135c0010=0x80000089 0x135c0054=0x00150430 0x135c0070=0x0000000E
+[    2.022650] init: usbdiag: clk  frat_fsys_usb20drd_phyclock         1       1        0        60000000    0          0     50000      Y   deviceless                      no_connection_id         
+[    2.038129] init: usbdiag: clk     mout_fsys_usb20drd_phyclock_user 1       1        0        60000000    0          0     50000      Y      deviceless                      no_connection_id         
+[    2.050491] init: usbdiag: clk        gout_fsys_usb20drd_phyclock   1       1        0        60000000    0          0     50000      Y         135c0000.phy                    phy                      
+[    2.063132] init: usbdiag: clk     fout_fsys_wpll_usb               1       1        0        20000000    0          0     50000      Y      deviceless                      no_connection_id         
+[    2.075971] init: usbdiag: clk        gout_fsys_usb20drd_clkcore    1       1        0        20000000    0          0     50000      Y         135c0000.phy                    ref                      
+[    2.088885] init: usbdiag: clk              mout_mif_cmu_fsys_usb20drd_refclk 1       1        0        666250000   0          0     50000      Y               deviceless                      no_connection_id         
+[    2.101887] init: usbdiag: clk                 dout_mif_cmu_fsys_usb20drd_refclk 1       1        0        66625000    0          0     50000      Y                  deviceless                      no_connection_id         
+[    2.114831] init: usbdiag: clk                    gout_mif_cmu_fsys_usb20drd_refclk 1       1        0        66625000    0          0     50000      Y                     deviceless                      no_connection_id         
+[    2.127798] init: usbdiag: clk                       gout_fsys_usb20drd_ref_clk 1       1        0        66625000    0          0     50000      Y                        soc@0:usb@13600000              ref                      
+[    2.140687] init: usbdiag: clk                       gout_fsys_usb20drd_aclk_hsdrd 1       1        0        276250000   0          0     50000      Y                        soc@0:usb@13600000              bus_early                
+[    2.153248] init: usbdiag: clk                       gout_fsys_usb20drd_hclk_ctrl 1       1        0        276250000   0          0     50000      Y                        soc@0:usb@13600000              ctrl                     
+[    7.604710] systemd[1]: Reached target Hardware activated USB gadget.
+[   95.973022] systemd[1]: sys-subsystem-net-devices-rndis0.device: Job sys-subsystem-net-devices-rndis0.device/start timed out.
+[   95.978376] systemd[1]: Timed out waiting for device /sys/subsystem/net/devices/rndis0.
+[   95.981378] systemd[1]: Dependency failed for unudhcpd DHCP server for the USB (rndis0) tether interface.
+[   95.992105] systemd[1]: sys-subsystem-net-devices-rndis0.device: Job sys-subsystem-net-devices-rndis0.device/start failed with result 'timeout'.
+== journal rndis
+Apr 13 14:18:43 galaxy-j4 init: USB gadget (rndis0) bound to UDC 13600000.usb
+Oct 18 08:30:53 galaxy-j4 systemd[1]: sys-subsystem-net-devices-rndis0.device: Job sys-subsystem-net-devices-rndis0.device/start timed out.
+Oct 18 08:30:53 galaxy-j4 systemd[1]: Timed out waiting for device /sys/subsystem/net/devices/rndis0.
+Oct 18 08:30:53 galaxy-j4 systemd[1]: Dependency failed for unudhcpd DHCP server for the USB (rndis0) tether interface.
+Oct 18 08:30:53 galaxy-j4 systemd[1]: unudhcpd.service: Job unudhcpd.service/start failed with result 'dependency'.
+Oct 18 08:30:53 galaxy-j4 systemd[1]: sys-subsystem-net-devices-rndis0.device: Job sys-subsystem-net-devices-rndis0.device/start failed with result 'timeout'.

@@ -1,0 +1,337 @@
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
+[    0.000000] Linux version 7.2.11-j4-00003-g19cb00b01549-dirty (@1991db2441ae) (Debian clang version 19.1.7 (3+b1), Debian LLD 19.1.7) #6 SMP PREEMPT Sun Oct 18 00:14:19 UTC 2026
+[    0.000000] KASLR disabled due to lack of seed
+[    0.000000] Machine model: Samsung Galaxy J4
+[    0.000000] printk: debug: ignoring loglevel setting.
+[    0.000000] efi: UEFI not found.
+[    0.000000] OF: reserved mem: 0x000000007e100000..0x000000007e2fffff (2048 KiB) nomap non-reusable ramoops@7e100000
+[    0.000000] OF: reserved mem: 0x0000000067000000..0x0000000067383fff (3600 KiB) nomap non-reusable framebuffer@67000000
+[    0.000000] OF: reserved mem: 0x0000000052800000..0x00000000529fffff (2048 KiB) nomap non-reusable tima@52800000
+[    0.000000] OF: reserved mem: 0x00000000710ef000..0x00000000710effff (4 KiB) nomap non-reusable camera@710ef000
+[    0.000000] OF: reserved mem: 0x00000000710f0000..0x00000000711fffff (1088 KiB) nomap non-reusable video-fw@710f0000
+[    0.000000] OF: reserved mem: 0x0000000072200000..0x00000000733fffff (18432 KiB) nomap non-reusable video-stream@72200000
+[    0.000000] OF: reserved mem: 0x0000000073400000..0x0000000078ffffff (94208 KiB) nomap non-reusable modem@73400000
+[    0.000000] OF: reserved mem: 0x0000000079000000..0x00000000793fffff (4096 KiB) nomap non-reusable wifibt@79000000
+[    0.000000] NUMA: Faking a node at [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000] NODE_DATA(0) allocated [mem 0xbfc3ab80-0xbfc3d23f]
+[    0.000000] cma: Reserved 32 MiB at 0x00000000bdc00000
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: Using PSCI v0.1 Function IDs from DT
+[    0.000000] Zone ranges:
+[    0.000000]   DMA      [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000]   DMA32    empty
+[    0.000000]   Normal   empty
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000040000000-0x00000000527fffff]
+[    0.000000]   node   0: [mem 0x0000000052800000-0x00000000529fffff]
+[    0.000000]   node   0: [mem 0x0000000052a00000-0x0000000066ffffff]
+[    0.000000]   node   0: [mem 0x0000000067000000-0x0000000067383fff]
+[    0.000000]   node   0: [mem 0x0000000067384000-0x00000000710eefff]
+[    0.000000]   node   0: [mem 0x00000000710ef000-0x00000000711fffff]
+[    0.000000]   node   0: [mem 0x0000000071200000-0x00000000721fffff]
+[    0.000000]   node   0: [mem 0x0000000072200000-0x00000000793fffff]
+[    0.000000]   node   0: [mem 0x0000000079400000-0x000000007e0fffff]
+[    0.000000]   node   0: [mem 0x000000007e100000-0x000000007e2fffff]
+[    0.000000]   node   0: [mem 0x000000007e300000-0x000000007e7fffff]
+[    0.000000]   node   0: [mem 0x0000000080000000-0x00000000bfffffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000] On node 0, zone DMA: 6144 pages in unavailable ranges
+[    0.000000] percpu: Embedded 26 pages/cpu s67096 r8192 d31208 u106496
+[    0.000000] pcpu-alloc: s67096 r8192 d31208 u106496 alloc=26*4096
+[    0.000000] pcpu-alloc: [0] 0 [0] 1 [0] 2 [0] 3 
+[    0.000000] Detected VIPT I-cache on CPU0
+[    0.000000] CPU features: detected: ARM erratum 845719
+[    0.000000] alternatives: applying boot alternatives
+[    0.000000] Kernel command line: console=tty0 ignore_loglevel clk_ignore_unused j4.autoreboot=45
+[    0.000000] printk: log buffer data + meta data: 131072 + 458752 = 589824 bytes
+[    0.000000] Dentry cache hash table entries: 262144 (order: 9, 2097152 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+[    0.000000] software IO TLB: SWIOTLB bounce buffer size adjusted to 1MB
+[    0.000000] software IO TLB: area num 4.
+[    0.000000] software IO TLB: mapped [mem 0x00000000bb698000-0x00000000bb898000] (2MB)
+[    0.000000] Fallback order for Node 0: 0 
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 518144
+[    0.000000] Policy zone: DMA
+[    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+[    0.000000] rcu: Preemptible hierarchical RCU implementation.
+[    0.000000] rcu: 	RCU event tracing is enabled.
+[    0.000000] rcu: 	RCU restricting CPUs from NR_CPUS=512 to nr_cpu_ids=4.
+[    0.000000] 	Trampoline variant of Tasks RCU enabled.
+[    0.000000] 	Tracing variant of Tasks RCU enabled.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=4
+[    0.000000] RCU Tasks: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
+[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[    0.000000] Root IRQ handler: gic_handle_irq
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.000000] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.000000] arch_timer: cp15 timer running at 26.00MHz (virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x5ff13d5a9, max_idle_ns: 440795202370 ns
+[    0.000000] sched_clock: 56 bits at 26MHz, resolution 38ns, wraps every 4398046511088ns
+[    0.000170] Console: colour dummy device 80x25
+[    0.000180] printk: legacy console [tty0] enabled
+[    0.000715] Calibrating delay loop (skipped), value calculated using timer frequency.. 52.00 BogoMIPS (lpj=104000)
+[    0.000737] pid_max: default: 32768 minimum: 301
+[    0.000960] Mount-cache hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[    0.000986] Mountpoint-cache hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[    0.001305] VFS: Finished mounting rootfs on nullfs
+[    0.002932] rcu: Hierarchical SRCU implementation.
+[    0.002955] rcu: 	Max phase no-delay instances is 1000.
+[    0.003147] Timer migration: 1 hierarchy levels; 8 children per group; 1 crossnode level
+[    0.003313] EFI services will not be available.
+[    0.003520] smp: Bringing up secondary CPUs ...
+[    0.004021] Detected VIPT I-cache on CPU1
+[    0.004100] CPU1: Booted secondary processor 0x0000000001 [0x410fd034]
+[    0.004687] Detected VIPT I-cache on CPU2
+[    0.004735] CPU2: Booted secondary processor 0x0000000002 [0x410fd034]
+[    0.005257] Detected VIPT I-cache on CPU3
+[    0.005299] CPU3: Booted secondary processor 0x0000000003 [0x410fd034]
+[    0.005387] smp: Brought up 1 node, 4 CPUs
+[    0.005441] SMP: Total of 4 processors activated.
+[    0.005451] CPU: All CPU(s) started at EL1
+[    0.005479] CPU features: detected: 32-bit EL0 Support
+[    0.005489] CPU features: detected: 32-bit EL1 Support
+[    0.005500] CPU features: detected: CRC32 instructions
+[    0.005515] CPU features: detected: PMUv3
+[    0.005555] alternatives: applying system-wide alternatives
+[    0.007317] Memory: 1841848K/2072576K available (15232K kernel code, 1358K rwdata, 6144K rodata, 1792K init, 620K bss, 194632K reserved, 32768K cma-reserved)
+[    0.008168] devtmpfs: initialized
+[    0.011016] posixtimers hash table entries: 2048 (order: 3, 32768 bytes, linear)
+[    0.011104] futex hash table entries: 1024 (65536 bytes on 1 NUMA nodes, total 64 KiB, linear).
+[    0.011662] 26416 pages in range for non-PLT usage
+[    0.011677] 517936 pages in range for PLT usage
+[    0.013000] DMI: not present or invalid.
+[    0.014715] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.015473] DMA: preallocated 256 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[    0.015534] audit: initializing netlink subsys (disabled)
+[    0.015699] audit: type=2000 audit(0.012:1): state=initialized audit_enabled=0 res=1
+[    0.016260] thermal_sys: Registered thermal governor 'step_wise'
+[    0.016266] thermal_sys: Registered thermal governor 'power_allocator'
+[    0.016311] cpuidle: using governor menu
+[    0.016476] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+[    0.016568] ASID allocator initialised with 65536 entries
+[    0.016727] Serial: AMBA PL011 UART driver
+[    0.017213] ramoops: uncorrectable error in header
+[    0.017287] ramoops: uncorrectable error in header
+[    0.017351] ramoops: uncorrectable error in header
+[    0.017438] ramoops: uncorrectable error in header
+[    0.017526] ramoops: uncorrectable error in header
+[    0.017604] ramoops: uncorrectable error in header
+[    0.017681] ramoops: uncorrectable error in header
+[    0.017758] ramoops: uncorrectable error in header
+[    0.017933] pstore: Using crash dump compression: deflate
+[    0.017949] printk: legacy console [ramoops-1] enabled
+[    0.028830] pstore: Registered ramoops as persistent store backend
+[    0.028951] ramoops: using 0x200000@0x7e100000, ecc: 16
+[    0.029704] /soc@0/interrupt-controller@104e1000: Fixed dependency cycle(s) with /soc@0/interrupt-controller@104e1000
+[    0.033239] HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.033385] HugeTLB: 0 KiB vmemmap can be freed for a 1.00 GiB page
+[    0.033456] HugeTLB: registered 32.0 MiB page size, pre-allocated 0 pages
+[    0.033574] HugeTLB: 0 KiB vmemmap can be freed for a 32.0 MiB page
+[    0.033692] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.033760] HugeTLB: 0 KiB vmemmap can be freed for a 2.00 MiB page
+[    0.033879] HugeTLB: registered 64.0 KiB page size, pre-allocated 0 pages
+[    0.033948] HugeTLB: 0 KiB vmemmap can be freed for a 64.0 KiB page
+[    0.035746] ACPI: Interpreter disabled.
+[    0.036246] iommu: Default domain type: Translated
+[    0.036410] iommu: DMA domain TLB invalidation policy: strict mode
+[    0.036929] SCSI subsystem initialized
+[    0.037172] libata version 3.00 loaded.
+[    0.037427] usbcore: registered new interface driver usbfs
+[    0.037525] usbcore: registered new interface driver hub
+[    0.037667] usbcore: registered new device driver usb
+[    0.037992] pps_core: LinuxPPS API ver. 1 registered
+[    0.038111] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.038241] PTP clock support registered
+[    0.038372] EDAC MC: Ver: 3.0.0
+[    0.038749] scmi_core: SCMI protocol bus registered
+[    0.039168] FPGA manager framework
+[    0.040054] vgaarb: loaded
+[    0.040462] clocksource: Switched to clocksource arch_sys_counter
+[    0.040846] VFS: Disk quotas dquot_6.6.0
+[    0.040933] VFS: Dquot-cache hash table entries: 512 (4096 bytes)
+[    0.041313] pnp: PnP ACPI: disabled
+[    0.047242] NET: Registered PF_INET protocol family
+[    0.047506] IP idents hash table entries: 32768 (order: 6, 262144 bytes, linear)
+[    0.048886] tcp_listen_portaddr_hash hash table entries: 1024 (order: 2, 16384 bytes, linear)
+[    0.049032] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.049114] TCP established hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.049328] TCP bind hash table entries: 16384 (order: 7, 524288 bytes, linear)
+[    0.049864] TCP: Hash tables configured (established 16384 bind 16384)
+[    0.050036] UDP hash table entries: 1024 (order: 4, 65536 bytes, linear)
+[    0.050328] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    0.050978] RPC: Registered named UNIX socket transport module.
+[    0.051105] RPC: Registered udp transport module.
+[    0.051171] RPC: Registered tcp transport module.
+[    0.051289] RPC: Registered tcp-with-tls transport module.
+[    0.051356] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    0.051483] PCI: CLS 0 bytes, default 64
+[    0.051782] Unpacking initramfs...
+[    0.056600] kvm [1]: HYP mode not available
+[    0.057803] Initialise system trusted keyrings
+[    0.058131] workingset: timestamp_bits=42 (anon: 37) max_order=19 bucket_order=0 (anon: 0)
+[    0.058638] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.059027] NFS: Registering the id_resolver key type
+[    0.059165] Key type id_resolver registered
+[    0.059233] Key type id_legacy registered
+[    0.059367] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
+[    0.059438] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Driver Registering...
+[    0.060007] Key type asymmetric registered
+[    0.060085] Asymmetric key parser 'x509' registered
+[    0.060262] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 243)
+[    0.060336] io scheduler mq-deadline registered
+[    0.060498] io scheduler kyber registered
+[    0.060605] io scheduler bfq registered
+[    0.062093] ledtrig-cpu: registered to indicate activity on CPUs
+[    0.063808] exynos-clkout exynos-clkout: cannot match parent device
+[    0.063905] exynos-clkout exynos-clkout: probe with driver exynos-clkout failed with error -22
+[    0.064619] exynos-chipid 10100000.chipid: error -ENODEV: Unknown SoC
+[    0.068607] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[    0.072154] [drm] Initialized simpledrm 1.0.0 for 67000000.framebuffer on minor 0
+[    0.089368] Freeing initrd memory: 928K
+[    0.091134] Console: switching to colour frame buffer device 90x80
+[    0.098525] simple-framebuffer 67000000.framebuffer: [drm] fb0: simpledrmdrmfb frame buffer device
+[    0.104821] loop: module loaded
+[    0.105611] megasas: 07.734.00.00-rc1
+[    0.109209] tun: Universal TUN/TAP device driver, 1.6
+[    0.109993] VFIO - User Level meta-driver version: 0.3
+[    0.111401] usbcore: registered new interface driver usb-storage
+[    0.113274] i2c_dev: i2c /dev entries driver
+[    0.117086] usbcore: registered new interface driver usbhid
+[    0.117473] usbhid: USB HID core driver
+[    0.119162] hw perfevents: enabled with armv8_cortex_a53 PMU driver, 7 (0,8000003f) counters available
+[    0.120800] NET: Registered PF_INET6 protocol family
+[    0.121931] Segment Routing with IPv6
+[    0.122256] In-situ OAM (IOAM) with IPv6
+[    0.122496] NET: Registered PF_PACKET protocol family
+[    0.122754] Key type dns_resolver registered
+[    0.135611] registered taskstats version 1
+[    0.135901] Loading compiled-in X.509 certificates
+[    0.144837] Demotion targets for Node 0: null
+[    0.150506] clk: Not disabling unused clocks
+[    0.150820] PM: genpd: Disabling unused power domains
+[    0.151861] Freeing unused kernel memory: 1792K
+[    0.152259] Run /init as init process
+[    0.152444]   with arguments:
+[    0.153321]     /init
+[    0.153480]   with environment:
+[    0.153640]     HOME=/
+[    0.153784]     TERM=linux
+[    0.162577] init: devtmpfs mounted
+[    0.166780] clk:                                  enable  prepare  protect                                duty  hardware                            connection
+[    0.167589] clk:    clock                          count    count    count        rate   accuracy phase  cycle    enable   consumer                         id
+[    0.168277] clk: ---------------------------------------------------------------------------------------------------------------------------------------------
+[    0.169088] clk:  frat_fsys_wifi2ap_usbpll            0       0        0        20000000    0          0     50000      Y   deviceless                      no_connection_id         
+[    0.169886] clk:     gout_fsys_usb20drd_clkcore       0       0        0        20000000    0          0     50000      Y      deviceless                      no_connection_id         
+[    0.170716] clk:  frat_fsys_usb20drd_phyclock         0       0        0        60000000    0          0     50000      Y   deviceless                      no_connection_id         
+[    0.171493] clk:  frat_mif_tcxo                       0       0        0        26000000    0          0     50000      Y   deviceless                      no_connection_id         
+[    0.173798] clk:     gout_mif_speedy_clk              0       0        0        26000000    0          0     50000      Y      deviceless                      no_connection_id         
+[    0.179510] clk:  oscclk                              2       2        0        26000000    0          0     50000      Y   deviceless                      no_connection_id         
+[    0.185130] clk:     mout_fsys_usb20drd_phyclock_user 0       0        0        26000000    0          0     50000      Y      deviceless                      no_connection_id         
+[    0.190781] clk:        gout_fsys_usb20drd_phyclock   0       0        0        26000000    0          0     50000      Y         deviceless                      no_connection_id         
+[    0.196373] clk:     fout_mif_shared2_pll             0       0        0        1397500000  0          0     50000      Y      deviceless                      no_connection_id         
+[    0.202069] clk:        mout_mif_shared2_pll          0       0        0        1397500000  0          0     50000      Y         deviceless                      no_connection_id         
+[    0.207716] clk:           ffac_mif_shared2_pll_div2  0       0        0        698750000   0          0     50000      Y            deviceless                      no_connection_id         
+[    0.213367] clk:              mout_mif_cmu_fsys_mmc0  0       0        0        698750000   0          0     50000      Y               deviceless                      no_connection_id         
+[    0.219004] clk:                 dout_mif_cmu_fsys_mmc0 0       0        0        349375000   0          0     50000      Y                  deviceless                      no_connection_id         
+[    0.224635] clk:                    gout_mif_cmu_fsys_mmc0 0       0        0        349375000   0          0     50000      Y                     deviceless                      no_connection_id         
+[    0.230425] clk:                       gout_fsys_mmc_embd_sdclkin 0       0        0        349375000   0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.235999] clk:              mout_mif_cmu_fsys_mmc2  0       0        0        698750000   0          0     50000      Y               deviceless                      no_connection_id         
+[    0.241615] clk:                 dout_mif_cmu_fsys_mmc2 0       0        0        349375000   0          0     50000      Y                  deviceless                      no_connection_id         
+[    0.247122] clk:                    gout_mif_cmu_fsys_mmc2 0       0        0        349375000   0          0     50000      Y                     deviceless                      no_connection_id         
+[    0.252798] clk:                       gout_fsys_mmc_card_sdclkin 0       0        0        349375000   0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.258397] clk:     fout_mif_shared1_pll             1       1        0        1332500000  0          0     50000      Y      deviceless                      no_connection_id         
+[    0.263968] clk:        mout_mif_shared1_pll          1       1        0        1332500000  0          0     50000      Y         deviceless                      no_connection_id         
+[    0.269670] clk:           ffac_mif_shared1_pll_div2  2       2        0        666250000   0          0     50000      Y            deviceless                      no_connection_id         
+[    0.275417] clk:              mout_mif_busd           1       1        0        666250000   0          0     50000      Y               deviceless                      no_connection_id         
+[    0.281269] clk:                 dout_mif_busd        1       1        0        333125000   0          0     50000      Y                  deviceless                      no_connection_id         
+[    0.287085] clk:                    gout_mif_pdma0_aclk 0       0        0        333125000   0          0     50000      Y                     deviceless                      no_connection_id         
+[    0.292991] clk:                    dout_mif_apb      2       2        0        166562500   0          0     50000      Y                     deviceless                      no_connection_id         
+[    0.298829] clk:                       gout_mif_sysreg_pclk 1       1        0        166562500   0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.304705] clk:                       gout_mif_gpio_pclk 1       1        0        166562500   0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.310572] clk:                       gout_mif_speedy_pclk 0       0        0        166562500   0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.316336] clk:              mout_mif_cmu_fsys_usb20drd_refclk 0       0        0        666250000   0          0     50000      Y               deviceless                      no_connection_id         
+[    0.322192] clk:                 dout_mif_cmu_fsys_usb20drd_refclk 0       0        0        66625000    0          0     50000      Y                  deviceless                      no_connection_id         
+[    0.328059] clk:                    gout_mif_cmu_fsys_usb20drd_refclk 0       0        0        66625000    0          0     50000      Y                     deviceless                      no_connection_id         
+[    0.333847] clk:                       gout_fsys_usb20drd_ref_clk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.339638] clk:              mout_mif_cmu_peri_bus   1       1        0        666250000   0          0     50000      Y               deviceless                      no_connection_id         
+[    0.345446] clk:                 dout_mif_cmu_peri_bus 1       1        0        66625000    0          0     50000      Y                  deviceless                      no_connection_id         
+[    0.351235] clk:                    gout_mif_cmu_peri_bus 6       6        0        66625000    0          0     50000      Y                     deviceless                      no_connection_id         
+[    0.357122] clk:                       gout_peri_uart_debug_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.362952] clk:                       gout_peri_uart_sensor_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.368757] clk:                       gout_peri_usi0_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.374603] clk:                       gout_peri_usi1_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.380492] clk:                       gout_peri_spi_ese_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.386299] clk:                       gout_peri_spi_rearfrom_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.392152] clk:                       gout_peri_mct_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.398047] clk:                       gout_peri_wdt_cpucl0_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.403849] clk:                       gout_peri_i2c_sensor1_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.409722] clk:                       gout_peri_i2c_sensor2_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.415567] clk:                       gout_peri_i2c_tsp_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.421347] clk:                       gout_peri_i2c_fuelgauge_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.427167] clk:                       gout_peri_i2c_nfc_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.433030] clk:                       gout_peri_i2c_muic_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.438818] clk:                       gout_peri_hsi2c_frontcam_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.444703] clk:                       gout_peri_hsi2c_maincam_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.450576] clk:                       gout_peri_hsi2c_frontsensor_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.456451] clk:                       gout_peri_hsi2c_rearaf_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.462325] clk:                       gout_peri_hsi2c_rearsensor_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.468213] clk:                       gout_peri_pwm_motor_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.474126] clk:                       gout_peri_rtc_alive_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.479989] clk:                       gout_peri_rtc_top_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.485890] clk:                       gout_peri_chipid_pclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.491789] clk:                       gout_peri_gpio_touch_pclk 1       1        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.497624] clk:                       gout_peri_gpio_top_pclk 1       1        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.503491] clk:                       gout_peri_gpio_nfc_pclk 1       1        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.509368] clk:                       gout_peri_gpio_ese_pclk 1       1        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.515243] clk:                       gout_peri_gpio_alive_pclk 1       1        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.521052] clk:                       gout_peri_sysreg_pclk 1       1        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.526869] clk:              mout_mif_cmu_peri_uart_debug 0       0        0        666250000   0          0     50000      Y               deviceless                      no_connection_id         
+[    0.532699] clk:                 dout_mif_cmu_peri_uart_debug 0       0        0        66625000    0          0     50000      Y                  deviceless                      no_connection_id         
+[    0.538578] clk:                    gout_mif_cmu_peri_uart_debug 0       0        0        66625000    0          0     50000      Y                     deviceless                      no_connection_id         
+[    0.544493] clk:                       gout_peri_uart_debug_uclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.550319] clk:              mout_mif_cmu_peri_uart_sensor 0       0        0        666250000   0          0     50000      Y               deviceless                      no_connection_id         
+[    0.556194] clk:                 dout_mif_cmu_peri_uart_sensor 0       0        0        66625000    0          0     50000      Y                  deviceless                      no_connection_id         
+[    0.562050] clk:                    gout_mif_cmu_peri_uart_sensor 0       0        0        66625000    0          0     50000      Y                     deviceless                      no_connection_id         
+[    0.567863] clk:                       gout_peri_uart_sensor_uclk 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.573713] clk:              mout_mif_cmu_peri_usi_0 0       0        0        666250000   0          0     50000      Y               deviceless                      no_connection_id         
+[    0.579588] clk:                 dout_mif_cmu_peri_usi_0 0       0        0        66625000    0          0     50000      Y                  deviceless                      no_connection_id         
+[    0.585403] clk:                    gout_mif_cmu_peri_usi_0 0       0        0        66625000    0          0     50000      Y                     deviceless                      no_connection_id         
+[    0.591292] clk:                       dout_peri_usi0_spi 0       0        0        33312500    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.597159] clk:                          gout_peri_usi0_sclk_spi 0       0        0        33312500    0          0     50000      Y                           deviceless                      no_connection_id         
+[    0.603034] clk:                       gout_peri_usi0_sclk_uart 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.608935] clk:              mout_mif_cmu_peri_usi_1 0       0        0        666250000   0          0     50000      Y               deviceless                      no_connection_id         
+[    0.614751] clk:                 dout_mif_cmu_peri_usi_1 0       0        0        66625000    0          0     50000      Y                  deviceless                      no_connection_id         
+[    0.620659] clk:                    gout_mif_cmu_peri_usi_1 0       0        0        66625000    0          0     50000      Y                     deviceless                      no_connection_id         
+[    0.626600] clk:                       dout_peri_usi1_spi 0       0        0        33312500    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.632495] clk:                          gout_peri_usi1_sclk_spi 0       0        0        33312500    0          0     50000      Y                           deviceless                      no_connection_id         
+[    0.638397] clk:                       gout_peri_usi1_sclk_uart 0       0        0        66625000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.644283] clk:     fout_mif_shared0_pll             1       1        0        1657500000  0          0     50000      Y      deviceless                      no_connection_id         
+[    0.650124] clk:        mout_mif_shared0_pll          1       1        0        1657500000  0          0     50000      Y         deviceless                      no_connection_id         
+[    0.655988] clk:           ffac_mif_shared0_pll_div2  1       1        0        828750000   0          0     50000      Y            deviceless                      no_connection_id         
+[    0.661844] clk:              mout_mif_cmu_fsys_bus   1       1        0        828750000   0          0     50000      Y               deviceless                      no_connection_id         
+[    0.667757] clk:                 dout_mif_cmu_fsys_bus 1       1        0        276250000   0          0     50000      Y                  deviceless                      no_connection_id         
+[    0.673625] clk:                    gout_mif_cmu_fsys_bus 2       2        0        276250000   0          0     50000      Y                     deviceless                      no_connection_id         
+[    0.679537] clk:                       gout_fsys_sysreg_pclk 1       1        0        276250000   0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.685473] clk:                       gout_fsys_gpio_pclk 1       1        0        276250000   0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.691361] clk:                       gout_fsys_usb20drd_aclk_hsdrd 0       0        0        276250000   0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.697359] clk:                       gout_fsys_usb20drd_hclk_ctrl 0       0        0        276250000   0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.703322] clk:                       gout_fsys_mmc_card_aclk 0       0        0        276250000   0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.709207] clk:                       gout_fsys_mmc_embd_aclk 0       0        0        276250000   0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.715140] clk:              mout_mif_cmu_peri_spi_rearfrom 0       0        0        828750000   0          0     50000      Y               deviceless                      no_connection_id         
+[    0.721103] clk:                 dout_mif_cmu_peri_spi_rearfrom 0       0        0        82875000    0          0     50000      Y                  deviceless                      no_connection_id         
+[    0.726979] clk:                    gout_mif_cmu_peri_spi_rearfrom 0       0        0        82875000    0          0     50000      Y                     deviceless                      no_connection_id         
+[    0.732943] clk:                       gout_peri_spi_rearfrom_clk 0       0        0        82875000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.738825] clk:              mout_mif_cmu_peri_spi_ese 0       0        0        828750000   0          0     50000      Y               deviceless                      no_connection_id         
+[    0.744724] clk:                 dout_mif_cmu_peri_spi_ese 0       0        0        82875000    0          0     50000      Y                  deviceless                      no_connection_id         
+[    0.750659] clk:                    gout_mif_cmu_peri_spi_ese 0       0        0        82875000    0          0     50000      Y                     deviceless                      no_connection_id         
+[    0.756554] clk:                       gout_peri_spi_ese_clk 0       0        0        82875000    0          0     50000      Y                        deviceless                      no_connection_id         
+[    0.762446] init: no android_usb gadget, skipping USB network setup
+[   15.795469] init: /dev/block: find: /dev/block: No such file or directory
+[   15.804752] init: /proc/partitions: major minor  #blocks  name
+[   15.808429] init: Timed out waiting for root device: /dev/mmcblk0p18
+[   15.814743] init: autoreboot in 45s
+[   60.821669] init: rebooting now
+[   60.828702] reboot: Restarting system

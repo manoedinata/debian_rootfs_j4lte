@@ -1,3 +1,14 @@
 debootstrap-rootfs/*
 AIK-Linux-mirror/
 misc-files/
+
+# mainline port: build outputs, images and vendored helpers
+build-mainline/
+build-uniloader/
+build-uniloader-ramdisk.gz
+recovery.img.twrp-backup
+mainline-tools/pylib/
+mainline-tools/logs/*.bin
+mainline-tools/logs/2026*
+mainline-tools/**/*.ko
+__pycache__/
