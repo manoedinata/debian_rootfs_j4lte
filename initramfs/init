@@ -205,6 +205,12 @@ else
 	# next last_kmsg.
 	log "/dev/block: $(find /dev/block -maxdepth 3 2>&1)"
 	log "/proc/partitions: $(cat /proc/partitions 2>&1)"
+	# INFORM3 was set to "normal boot" above, so a reset lands in BOOT (the
+	# downstream system) instead of looping here: a mainline kernel that lost
+	# its eMMC must not strand the phone.
+	log "rebooting in 20s"
+	sleep 20
+	reboot -f
 	rescue_shell "Timed out waiting for root device: $root"
 fi
 
