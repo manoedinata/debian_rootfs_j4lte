@@ -88,6 +88,8 @@ rescue_shell() {
 		sleep "$autoreboot"
 		sync
 		log "rebooting now"
+		# sysrq b skips the driver shutdown hooks, which can hang on a half-working display
+		echo b > /proc/sysrq-trigger
 		reboot -f
 		log "reboot -f returned, falling back to the rescue shell"
 	fi
