@@ -10,6 +10,7 @@ CMUS = {
     'mif':  dict(base=0x10460000, compat='samsung,exynos7570-cmu-mif'),
     'fsys': dict(base=0x13730000, compat='samsung,exynos7570-cmu-fsys'),
     'peri': dict(base=0x101f0000, compat='samsung,exynos7570-cmu-peri'),
+    'dispaud': dict(base=0x148d0000, compat='samsung,exynos7570-cmu-dispaud'),
 }
 
 EXTERNAL = {
@@ -26,9 +27,10 @@ MIF_CMU_CLOCKS = [          # CLKCMU_<x>: mux -> div -> gate towards other CMUs
     'FSYS_BUS', 'FSYS_MMC0', 'FSYS_MMC2', 'FSYS_USB20DRD_REFCLK',
     'PERI_BUS', 'PERI_UART_DEBUG', 'PERI_UART_SENSOR',
     'PERI_SPI_REARFROM', 'PERI_SPI_ESE', 'PERI_USI_0', 'PERI_USI_1',
+    'DISPAUD_BUS', 'DISPAUD_DECON_INT_VCLK',
 ]
 
-SPEC = {'mif': [], 'fsys': [], 'peri': []}
+SPEC = {'mif': [], 'fsys': [], 'peri': [], 'dispaud': []}
 
 m = SPEC['mif']
 for n in (0, 1, 2):
@@ -119,3 +121,33 @@ for ds, name, fl in [
     ('SYSREG_PERI_IPCLKPORT_PCLK', 'gout_peri_sysreg_pclk', 'crit'),
 ]:
     p.append(('gate', 'PERI_GATE_CLK_PERI_UID_' + ds, name, fl))
+
+# CMU_DISPAUD (0x148D0000): display (the 7870-style ECLK_USER mux at +0x218 faults on 7570, left out) (and audio+MI2S, excluded here). The DECON
+# ECLK user mux has no MIF-side divider of its own on the 7570 - pwrcal feeds
+# it from the MIF CLKCMU_DISPAUD_DECON_INT_VCLK gate. frats are the same
+# 188 MHz placeholders upstream 7870 uses (nothing reads the byte/esc rate).
+d = SPEC['dispaud'] = [
+    ('frat', 'CLKPHY_DISPAUD_MIPIPHY_TXBYTECLKHS', 'frat_dispaud_mipiphy_txbyteclkhs', ''),
+    ('frat', 'CLKPHY_DISPAUD_MIPIPHY_RXCLKESC0', 'frat_dispaud_mipiphy_rxclkesc0', ''),
+    ('mux', 'DISPAUD_MUX_CLKCMU_DISPAUD_BUS_USER', 'mout_dispaud_bus_user', ''),
+    ('mux', 'DISPAUD_MUX_CLKCMU_DISPAUD_DECON_INT_VCLK_USER', 'mout_dispaud_decon_vclk_user', ''),
+    ('mux', 'DISPAUD_MUX_CLKPHY_DISPAUD_MIPIPHY_TXBYTECLKHS_USER', 'mout_dispaud_mipiphy_txbyteclkhs_user', ''),
+    ('mux', 'DISPAUD_MUX_CLKPHY_DISPAUD_MIPIPHY_RXCLKESC0_USER', 'mout_dispaud_mipiphy_rxclkesc0_user', ''),
+    ('div', 'DISPAUD_DIV_CLK_DISPAUD_APB', 'dout_dispaud_apb', ''),
+    ('div', 'DISPAUD_DIV_CLK_DISPAUD_DECON_INT_VCLK', 'dout_dispaud_decon_vclk', ''),
+]
+# CLK_ENABLE_CLK_DISPAUD_BUS/APB/DECON_INT_VCLK/MIPIPHY gates. On the 7570 the
+# DECON I_VCLK gate (0x820) is the only internal decon gate; there is no
+# separate ECLK gate, and the mipiphy gates are 0x824/0x828.
+for ds, name, fl in [
+    ('DISPAUD_GATE_CLK_DISPAUD_UID_CLKCMU_DISPAUD_BUS', 'gout_dispaud_bus', ''),
+    ('DISPAUD_GATE_CLK_DISPAUD_UID_CLKCMU_DISPAUD_BUS_VPP', 'gout_dispaud_bus_vpp', ''),
+    ('DISPAUD_GATE_CLK_DISPAUD_UID_CLKCMU_DISPAUD_BUS_DISP', 'gout_dispaud_bus_disp', ''),
+    ('DISPAUD_GATE_CLK_DISPAUD_UID_CLKCMU_DISPAUD_BUS_PPMU', 'gout_dispaud_bus_ppmu', ''),
+    ('DISPAUD_GATE_CLK_DISPAUD_UID_CLK_DISPAUD_APB', 'gout_dispaud_apb', ''),
+    ('DISPAUD_GATE_CLK_DISPAUD_UID_CLK_DISPAUD_APB_DISP', 'gout_dispaud_apb_disp', ''),
+    ('DISPAUD_GATE_CLK_DISPAUD_UID_DECON_IPCLKPORT_I_VCLK', 'gout_dispaud_decon_vclk', ''),
+    ('DISPAUD_GATE_CLK_DISPAUD_UID_DSIM0_IPCLKPORT_I_TXBYTECLKHS', 'gout_dispaud_mipiphy_txbyteclkhs', ''),
+    ('DISPAUD_GATE_CLK_DISPAUD_UID_DSIM0_IPCLKPORT_I_RXCLKESC0', 'gout_dispaud_mipiphy_rxclkesc0', ''),
+]:
+    d.append(('gate', ds, name, fl))
