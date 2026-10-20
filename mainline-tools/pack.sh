@@ -5,7 +5,8 @@
 # "kernel", header parameters copied from the AIK split of the stock image.
 #
 # uniLoader is built in a throwaway copy (build-uniloader/) so uniLoader/blob
-# keeps whatever the downstream image was built from. Nothing is flashed here.
+# keeps whatever the downstream image was built from. The submodule's own
+# hand-off code is used unless UNILOADER_J4_HANDOFF=1. Nothing is flashed here.
 #
 # usage: mainline-tools/pack.sh [output.img]   (default: build-mainline/boot-mainline.img)
 #
@@ -71,8 +72,11 @@ if [ -n "${BOOTARGS_EXTRA:-}${BOOTARGS_REMOVE:-}" ]; then
 	' _ "${BOOTARGS_EXTRA:-}" "${BOOTARGS_REMOVE:-}"
 fi
 
-# J4 hand-off variant (state report, copy verify, cache maintenance)
-cp -f "$ROOT/mainline-tools/uniloader/load-kernel.c" "$UL/arch/aarch64/load-kernel.c"
+# Stock uniLoader hand-off by default; UNILOADER_J4_HANDOFF=1 swaps in the J4 variant
+# (state report, copy verify, cache maintenance) for debugging early hangs.
+if [ "${UNILOADER_J4_HANDOFF:-0}" = 1 ]; then
+	cp -f "$ROOT/mainline-tools/uniloader/load-kernel.c" "$UL/arch/aarch64/load-kernel.c"
+fi
 
 if [ -n "${PAYLOAD_ENTRY:-}" ]; then
 	sed -i "s/^CONFIG_PAYLOAD_ENTRY=.*/CONFIG_PAYLOAD_ENTRY=$PAYLOAD_ENTRY/" "$UL/configs/j4lte_defconfig"
