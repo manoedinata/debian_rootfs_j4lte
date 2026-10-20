@@ -235,7 +235,7 @@ for cmu, lst in order.items():
     out.append('\t.clk_regs\t\t= %s_clk_regs,' % cmu)
     out.append('\t.nr_clk_regs\t\t= ARRAY_SIZE(%s_clk_regs),' % cmu)
     out.append('\t.nr_clk_ids\t\t= %s_NR_CLK,' % cmu.upper())
-    if cmu == 'dispaud':
+    if cmu in ('dispaud', 'g3d'):
         out.append('\t.clk_name\t\t= "bus",')   # MIF gate feeding the CMU register bus
     out.append('};\n')
 

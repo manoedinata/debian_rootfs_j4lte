@@ -11,6 +11,7 @@ CMUS = {
     'fsys': dict(base=0x13730000, compat='samsung,exynos7570-cmu-fsys'),
     'peri': dict(base=0x101f0000, compat='samsung,exynos7570-cmu-peri'),
     'dispaud': dict(base=0x148d0000, compat='samsung,exynos7570-cmu-dispaud'),
+    'g3d':  dict(base=0x11460000, compat='samsung,exynos7570-cmu-g3d'),
 }
 
 EXTERNAL = {
@@ -30,7 +31,7 @@ MIF_CMU_CLOCKS = [          # CLKCMU_<x>: mux -> div -> gate towards other CMUs
     'DISPAUD_BUS', 'DISPAUD_DECON_INT_VCLK',
 ]
 
-SPEC = {'mif': [], 'fsys': [], 'peri': [], 'dispaud': []}
+SPEC = {'mif': [], 'fsys': [], 'peri': [], 'dispaud': [], 'g3d': []}
 
 m = SPEC['mif']
 for n in (0, 1, 2):
@@ -56,6 +57,12 @@ m += [
     ('gate', 'MIF_GATE_CLK_MIF_UID_WRAP_ADC_IF_IPCLKPORT_I_OSC_SYS', 'gout_mif_adc_osc_sys', ''),
     ('gate', 'MIF_GATE_CLK_MIF_UID_GPIO_MIF_IPCLKPORT_PCLK', 'gout_mif_gpio_pclk', 'crit'),
     ('gate', 'MIF_GATE_CLK_MIF_UID_SYSREG_MIF_IPCLKPORT_PCLK', 'gout_mif_sysreg_pclk', 'crit'),
+]
+# CLKCMU_G3D comes last so that adding it kept the ids above unchanged
+m += [
+    ('mux', 'MIF_MUX_CLKCMU_G3D', None, ''),
+    ('div', 'MIF_DIV_CLKCMU_G3D', None, ''),
+    ('gate', 'MIF_GATE_CLKCMU_G3D', None, 'rate'),
 ]
 
 f = SPEC['fsys']
@@ -154,3 +161,14 @@ for ds, name, fl in [
     ('DISPAUD_GATE_CLK_DISPAUD_UID_DSIM0_IPCLKPORT_I_RXCLKESC0', 'gout_dispaud_mipiphy_rxclkesc0', ''),
 ]:
     d.append(('gate', ds, name, fl))
+
+# CMU_G3D (0x11460000): the Mali-T720. The GPU core clock is the G3D_BUS divider
+# gated by G3D_IPCLKPORT_CLK. The other bus, APB and oscclk gates of the block
+# (async bridges, register slices, PMU, sysreg, QE, PPMU, secure CFW) are left
+# out: nothing here gates them, so they stay as the bootloader left them (on).
+g = SPEC['g3d'] = [
+    ('mux', 'G3D_MUX_CLKCMU_G3D_USER', 'mout_g3d_user', ''),
+    ('div', 'G3D_DIV_CLK_G3D_BUS', 'dout_g3d_bus', ''),
+    ('div', 'G3D_DIV_CLK_G3D_APB', 'dout_g3d_apb', ''),
+    ('gate', 'G3D_GATE_CLK_G3D_UID_G3D_IPCLKPORT_CLK', 'gout_g3d_clk', 'rate'),
+]
