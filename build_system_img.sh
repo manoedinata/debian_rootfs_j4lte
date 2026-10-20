@@ -10,7 +10,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOTFS_DIR="$SCRIPT_DIR/debootstrap-rootfs"
+ROOTFS_DIR="$(realpath "${ROOTFS_DIR:-$SCRIPT_DIR/debootstrap-rootfs}")"
 OUT_DIR="$SCRIPT_DIR/misc-files"
 OUT_IMG="${OUT_IMG:-system.img}"
 CONTAINER_NAME="j4-e2fsprogs"
@@ -25,6 +25,13 @@ LABEL="${LABEL:-system}"
 # mutually exclusive, so the defaults must be negated rather than just adding
 # meta_bg on top.
 FEATURES="^resize_inode,^has_journal,^flex_bg,^metadata_csum,^64bit,meta_bg,uninit_bg"
+# JOURNAL=1: same feature set plus a 64 MiB journal (the 3.18 kernel mounts it
+# too), for a SYSTEM that the mainline kernel runs read-write every day.
+JOURNAL_OPTS=()
+if [ "${JOURNAL:-0}" = 1 ]; then
+	FEATURES="${FEATURES/^has_journal/has_journal}"
+	JOURNAL_OPTS=(-J size=64)
+fi
 
 if [ ! -d "$ROOTFS_DIR" ]; then
 	echo "error: $ROOTFS_DIR not found" >&2
@@ -33,6 +40,11 @@ fi
 mkdir -p "$OUT_DIR"
 rm -f "$OUT_DIR/$OUT_IMG"
 
+if docker container inspect "$CONTAINER_NAME" >/dev/null 2>&1 &&
+		[ "$(docker inspect -f '{{range .Mounts}}{{if eq .Destination "/rootfs"}}{{.Source}}{{end}}{{end}}' "$CONTAINER_NAME")" != "$ROOTFS_DIR" ]; then
+	echo "==> $CONTAINER_NAME mounts another rootfs, recreating it"
+	docker rm -f "$CONTAINER_NAME" >/dev/null
+fi
 if ! docker container inspect "$CONTAINER_NAME" >/dev/null 2>&1; then
 	echo "==> creating $CONTAINER_NAME container"
 	docker run -dit --name "$CONTAINER_NAME" \
@@ -53,7 +65,7 @@ fi
 
 echo "==> building $OUT_IMG ($SIZE) from $ROOTFS_DIR"
 docker exec "$CONTAINER_NAME" mke2fs -F -t ext4 -b 4096 -I 256 -m 0 \
-	-L "$LABEL" -O "$FEATURES" \
+	-L "$LABEL" -O "$FEATURES" "${JOURNAL_OPTS[@]}" \
 	-d /rootfs /out/$OUT_IMG "$SIZE"
 
 echo "==> matching default mount opts / fsck interval to stock SYSTEM"

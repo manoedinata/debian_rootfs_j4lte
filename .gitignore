@@ -12,3 +12,4 @@ mainline-tools/logs/*.bin
 mainline-tools/logs/2026*
 mainline-tools/**/*.ko
 __pycache__/
+rootfs-bullseye/
