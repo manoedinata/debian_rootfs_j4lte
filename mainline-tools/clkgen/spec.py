@@ -136,16 +136,19 @@ d = SPEC['dispaud'] = [
     ('div', 'DISPAUD_DIV_CLK_DISPAUD_APB', 'dout_dispaud_apb', ''),
     ('div', 'DISPAUD_DIV_CLK_DISPAUD_DECON_INT_VCLK', 'dout_dispaud_decon_vclk', ''),
 ]
+# The bus and APB gates are critical: the display runs on them from the
+# bootloader on, and their other users (the SysMMU) would otherwise gate it by
+# enabling and disabling them while probing.
 # CLK_ENABLE_CLK_DISPAUD_BUS/APB/DECON_INT_VCLK/MIPIPHY gates. On the 7570 the
 # DECON I_VCLK gate (0x820) is the only internal decon gate; there is no
 # separate ECLK gate, and the mipiphy gates are 0x824/0x828.
 for ds, name, fl in [
-    ('DISPAUD_GATE_CLK_DISPAUD_UID_CLKCMU_DISPAUD_BUS', 'gout_dispaud_bus', ''),
+    ('DISPAUD_GATE_CLK_DISPAUD_UID_CLKCMU_DISPAUD_BUS', 'gout_dispaud_bus', 'crit'),
     ('DISPAUD_GATE_CLK_DISPAUD_UID_CLKCMU_DISPAUD_BUS_VPP', 'gout_dispaud_bus_vpp', ''),
-    ('DISPAUD_GATE_CLK_DISPAUD_UID_CLKCMU_DISPAUD_BUS_DISP', 'gout_dispaud_bus_disp', ''),
+    ('DISPAUD_GATE_CLK_DISPAUD_UID_CLKCMU_DISPAUD_BUS_DISP', 'gout_dispaud_bus_disp', 'crit'),
     ('DISPAUD_GATE_CLK_DISPAUD_UID_CLKCMU_DISPAUD_BUS_PPMU', 'gout_dispaud_bus_ppmu', ''),
-    ('DISPAUD_GATE_CLK_DISPAUD_UID_CLK_DISPAUD_APB', 'gout_dispaud_apb', ''),
-    ('DISPAUD_GATE_CLK_DISPAUD_UID_CLK_DISPAUD_APB_DISP', 'gout_dispaud_apb_disp', ''),
+    ('DISPAUD_GATE_CLK_DISPAUD_UID_CLK_DISPAUD_APB', 'gout_dispaud_apb', 'crit'),
+    ('DISPAUD_GATE_CLK_DISPAUD_UID_CLK_DISPAUD_APB_DISP', 'gout_dispaud_apb_disp', 'crit'),
     ('DISPAUD_GATE_CLK_DISPAUD_UID_DECON_IPCLKPORT_I_VCLK', 'gout_dispaud_decon_vclk', ''),
     ('DISPAUD_GATE_CLK_DISPAUD_UID_DSIM0_IPCLKPORT_I_TXBYTECLKHS', 'gout_dispaud_mipiphy_txbyteclkhs', ''),
     ('DISPAUD_GATE_CLK_DISPAUD_UID_DSIM0_IPCLKPORT_I_RXCLKESC0', 'gout_dispaud_mipiphy_rxclkesc0', ''),
