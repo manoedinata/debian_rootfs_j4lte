@@ -17,12 +17,17 @@ mount -t proc proc /proc
 autoreboot=""
 initwdt=60
 rescue=""
-wtest=""
 bootreboot=""
+# j4.ums=<block device>: exported to the USB host as a mass-storage disk next to
+# RNDIS (mainline configfs gadget only). USERDATA belongs to the laptop that
+# boots from it; j4.ums=0 exports nothing.
+ums=/dev/mmcblk0p25
+cmdline_root=/dev/mmcblk0p18
 for arg in $(cat /proc/cmdline 2>/dev/null); do
 	case "$arg" in
 		j4.autoreboot=*) autoreboot="${arg#j4.autoreboot=}" ;;
-		j4.wtest=*)      wtest="${arg#j4.wtest=}" ;;
+		j4.ums=*)        ums="${arg#j4.ums=}" ;;
+		root=*)          cmdline_root="${arg#root=}" ;;
 		j4.bootreboot=*) bootreboot="${arg#j4.bootreboot=}" ;;
 		j4.initwdt=*)    initwdt="${arg#j4.initwdt=}" ;;
 		j4.rescue=*)     rescue="${arg#j4.rescue=}" ;;
@@ -40,44 +45,6 @@ if [ "$initwdt" -gt 0 ] 2>/dev/null; then
 	  reboot -f ) &
 	wdt_pid=$!
 fi
-
-# j4.wtest=<offset_MiB>:<size_MiB>: eMMC write-path test, only ever on USERDATA
-# (mmcblk0p25, a fresh unused ext4). Writes random data, fsyncs, drops the
-# caches, reads it back and compares hashes; the hash is logged so a later boot
-# with another kernel can verify the same region.
-write_test() {
-	dev=/dev/mmcblk0p25
-	off=${wtest%%:*}
-	size=${wtest##*:}
-	if [ -z "$off" ] || [ -z "$size" ] || [ "$off" -lt 1024 ] || [ "$size" -lt 1 ] || [ "$size" -gt 64 ]; then
-		log "wtest: refusing offset=$off size=$size (need offset>=1024 MiB, 1<=size<=64 MiB)"
-		return
-	fi
-	dev_bytes=$(blockdev --getsize64 "$dev" 2>/dev/null)
-	if [ -z "$dev_bytes" ] || [ $(( (off + size) * 1048576 )) -gt "$dev_bytes" ]; then
-		log "wtest: $dev too small or missing ($dev_bytes bytes)"
-		return
-	fi
-	log "wtest: $dev offset ${off} MiB size ${size} MiB"
-	dd if=/dev/urandom of=/wtest.pat bs=1M count="$size" 2>/dev/null
-	want=$(sha256sum /wtest.pat | cut -d' ' -f1)
-	t0=$(date +%s)
-	dd if=/wtest.pat of="$dev" bs=1M seek="$off" conv=fsync 2>/dev/null
-	sync
-	t1=$(date +%s)
-	echo 3 >/proc/sys/vm/drop_caches
-	blockdev --flushbufs "$dev"
-	got=$(dd if="$dev" bs=1M skip="$off" count="$size" 2>/dev/null | sha256sum | cut -d' ' -f1)
-	t2=$(date +%s)
-	log "wtest: want $want"
-	log "wtest: got  $got"
-	if [ "$want" = "$got" ]; then
-		log "wtest: RESULT OK (write $((t1 - t0))s, read $((t2 - t1))s)"
-	else
-		log "wtest: RESULT MISMATCH"
-	fi
-	rm -f /wtest.pat
-}
 
 rescue_shell() {
 	log "$1"
@@ -153,11 +120,50 @@ setup_usb_configfs() {
 	echo 'rndis%d' >"$g/functions/rndis.usb0/ifname" 2>/dev/null || log "USB gadget: setting ifname FAILED"
 	echo 7a:50:b5:6f:88:a3 >"$g/functions/rndis.usb0/dev_addr"
 	echo 52:d8:64:70:20:45 >"$g/functions/rndis.usb0/host_addr"
+	# the disk goes first (interface 0): some BIOS USB stacks only look there
+	setup_usb_mass_storage "$g"
 	ln -s "$g/functions/rndis.usb0" "$g/configs/c.1/rndis.usb0"
 	if echo "$udc" >"$g/UDC" 2>/dev/null; then
-		log "USB gadget (rndis0) bound to UDC $udc"
+		log "USB gadget (rndis0${ums_on:+ + mass storage}) bound to UDC $udc"
 	else
 		log "USB gadget: binding to UDC $udc FAILED"
+	fi
+}
+
+# Second function of the configfs gadget: $ums as a raw USB disk. The phone
+# itself never mounts it; exporting the root device would let the host and the
+# phone write the same filesystem, so that is refused.
+ums_on=""
+setup_usb_mass_storage() {
+	g=$1
+	case "$ums" in ""|0|off|none) return ;; esac
+	if [ "$ums" = "$cmdline_root" ]; then
+		log "USB mass storage: $ums is the root device, not exporting it"
+		return
+	fi
+	# eMMC partitions can still be enumerating
+	i=0
+	while [ ! -b "$ums" ] && [ "$i" -lt 30 ]; do
+		sleep 0.5
+		i=$((i + 1))
+	done
+	if [ ! -b "$ums" ]; then
+		log "USB mass storage: $ums missing, not exporting it"
+		return
+	fi
+	f="$g/functions/mass_storage.usb0"
+	mkdir -p "$f" || return
+	echo 1 >"$f/stall"
+	echo 1 >"$f/lun.0/removable"
+	echo 0 >"$f/lun.0/ro"
+	echo "Samsung J4 USERDATA" >"$f/lun.0/inquiry_string"	# vendor(8) product(16)
+	if echo "$ums" >"$f/lun.0/file" 2>/dev/null; then
+		ln -s "$f" "$g/configs/c.1/mass_storage.usb0"
+		ums_on=1
+		log "USB mass storage: exporting $ums"
+	else
+		log "USB mass storage: opening $ums FAILED"
+		rmdir "$f" 2>/dev/null
 	fi
 }
 
@@ -189,7 +195,7 @@ setup_usb_network() {
 setup_usb_network
 
 # Root is SYSTEM (mmcblk0p18), flashed from misc-files/system.img (see
-# build_system_img.sh). USERDATA is left alone for Android's /data.
+# build_system_img.sh). USERDATA is the laptop disk (j4.ums above).
 # An explicit root= on the kernel cmdline overrides this.
 root=/dev/mmcblk0p18
 fallback_root=""
@@ -262,7 +268,6 @@ if [ -n "$autoreboot" ]; then
 	log "os-release: $(head -n 2 /mnt/root/etc/os-release 2>&1 | tr '\n' ' ')"
 	log "/proc/partitions: $(cat /proc/partitions 2>&1)"
 	umount /mnt/root
-	[ -n "$wtest" ] && write_test
 	rescue_shell "test boot done"
 fi
 
