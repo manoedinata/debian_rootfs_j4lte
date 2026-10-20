@@ -3,7 +3,7 @@
 # Mainline test loop with the test image living in RECOVERY (BOOT stays the
 # working Debian image).
 #
-#   test-mainline.sh flash     write build-mainline/boot-mainline.img to RECOVERY (verified)
+#   test-mainline.sh flash     write build-mainline/boot-mainline.img to the test slot, BOOT (verified)
 #   test-mainline.sh reboot    'reboot recovery' on the phone -> boots the mainline image,
 #                              which reboots itself (j4.autoreboot) back into Debian
 #   test-mainline.sh dump      wait for Debian, dump + decode the ramoops console
@@ -17,7 +17,15 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 HOST="${HOST:-root@172.16.42.1}"
 IMG="${IMG:-$ROOT/build-mainline/boot-mainline.img}"
 SSH=(ssh -o ConnectTimeout=8 -o BatchMode=yes "$HOST")
-DEV=/dev/mmcblk0p11   # RECOVERY, 39845888 bytes
+# The test image lives in BOOT (p10, 33554432 bytes) and downstream Debian in
+# RECOVERY, so a hung test boot is one key combo away from Debian. SLOT=recovery
+# restores the old layout (test image in RECOVERY p11, 39845888 bytes).
+SLOT="${SLOT:-boot}"
+if [ "$SLOT" = recovery ]; then
+	DEV=/dev/mmcblk0p11; DEVSIZE=39845888; REBOOT_CMD='reboot recovery'
+else
+	DEV=/dev/mmcblk0p10; DEVSIZE=33554432; REBOOT_CMD='reboot'
+fi
 RAMOOPS_ADDR=0x7e100000
 RAMOOPS_SIZE=0x180000
 ssh_q() { "${SSH[@]}" "$@" 2> >(grep -v 'post-quantum\|store now\|openssh.com/pq' >&2); }
@@ -36,18 +44,18 @@ do_flash() {
 	[ -f "$IMG" ] || { echo "error: $IMG not found" >&2; exit 1; }
 	local size want got rb
 	size=$(stat -c %s "$IMG"); want=$(sha256sum "$IMG" | cut -c1-64)
-	[ "$size" -le 39845888 ] || { echo "error: image larger than the RECOVERY partition" >&2; exit 1; }
-	[ "$(ssh_q "blockdev --getsize64 $DEV")" = 39845888 ] || { echo "error: $DEV is not the RECOVERY partition" >&2; exit 1; }
+	[ "$size" -le "$DEVSIZE" ] || { echo "error: image larger than the $SLOT partition" >&2; exit 1; }
+	[ "$(ssh_q "blockdev --getsize64 $DEV")" = "$DEVSIZE" ] || { echo "error: $DEV is not the $SLOT partition" >&2; exit 1; }
 	scp -q -o BatchMode=yes "$IMG" "$HOST:/tmp/mainline-test.img"
 	got=$(ssh_q "sha256sum /tmp/mainline-test.img | cut -c1-64")
 	[ "$got" = "$want" ] || { echo "transfer mismatch" >&2; exit 1; }
 	rb=$(ssh_q "dd if=/tmp/mainline-test.img of=$DEV bs=1M conv=fsync 2>/dev/null; sync; dd if=$DEV bs=1M 2>/dev/null | head -c $size | sha256sum | cut -c1-64")
-	[ "$rb" = "$want" ] && echo "==> RECOVERY now holds $(basename "$IMG") ($want)" || { echo "READBACK MISMATCH $rb" >&2; exit 1; }
+	[ "$rb" = "$want" ] && echo "==> $SLOT now holds $(basename "$IMG") ($want)" || { echo "READBACK MISMATCH $rb" >&2; exit 1; }
 }
 
 do_reboot() {
-	echo "==> reboot recovery (mainline boots, runs ~1 min, then reboots into Debian)"
-	ssh_q 'sync; (sleep 1; reboot recovery) >/dev/null 2>&1 &' || true
+	echo "==> $REBOOT_CMD ($SLOT slot boots the mainline test image)"
+	ssh_q "sync; (sleep 1; $REBOOT_CMD) >/dev/null 2>&1 &" || true
 }
 
 do_dump() {
