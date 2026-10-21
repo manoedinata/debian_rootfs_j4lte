@@ -5,8 +5,7 @@
 # "kernel", header parameters copied from the AIK split of the stock image.
 #
 # uniLoader is built in a throwaway copy (build-uniloader/) so uniLoader/blob
-# keeps whatever the downstream image was built from. The submodule's own
-# hand-off code is used unless UNILOADER_J4_HANDOFF=1. Nothing is flashed here.
+# keeps whatever the downstream image was built from. Nothing is flashed here.
 #
 # usage: mainline-tools/pack.sh [output.img]   (default: build-mainline/boot-mainline.img)
 #
@@ -21,6 +20,9 @@
 #
 # BOOTARGS_REMOVE: space-separated tokens dropped from /chosen/bootargs first (e.g.
 # console=ttySAC2,115200: with no UART attached it only slows the boot).
+#
+# KERNEL_GZIP=1 embeds the Image gzip-compressed (uniLoader CONFIG_KERNEL_GZIP inflates
+# it to PAYLOAD_ENTRY and checks its CRC32), roughly halving the boot image.
 #
 # PAYLOAD_ENTRY is where uniLoader copies the Image and jumps (default: the
 # j4lte_defconfig value, 0x50000000). Downstream 3.18 derives PHYS_OFFSET from
@@ -56,7 +58,12 @@ mkdir -p "$UL"
 rsync -a --delete --exclude .git --exclude blob --exclude '*.o' --exclude '*.a' \
 	--exclude uniLoader --exclude 'uniLoader.*' --exclude .config "$ROOT/uniLoader/" "$UL/"
 mkdir -p "$UL/blob"
-cp -f "$IMAGE" "$UL/blob/Image"
+if [ "${KERNEL_GZIP:-0}" = 1 ]; then
+	gzip -9 -n -c "$IMAGE" > "$UL/blob/Image"
+	echo "CONFIG_KERNEL_GZIP=y" >> "$UL/configs/j4lte_defconfig"
+else
+	cp -f "$IMAGE" "$UL/blob/Image"
+fi
 cp -f "$DTB" "$UL/blob/dtb"
 cp -f "$RAMDISK" "$UL/blob/ramdisk"
 
@@ -70,12 +77,6 @@ if [ -n "${BOOTARGS_EXTRA:-}${BOOTARGS_REMOVE:-}" ]; then
 		fdtput -t s "$dtb" /chosen bootargs "$new"
 		echo "==> dtb bootargs: $(fdtget -t s "$dtb" /chosen bootargs)"
 	' _ "${BOOTARGS_EXTRA:-}" "${BOOTARGS_REMOVE:-}"
-fi
-
-# Stock uniLoader hand-off by default; UNILOADER_J4_HANDOFF=1 swaps in the J4 variant
-# (state report, copy verify, cache maintenance) for debugging early hangs.
-if [ "${UNILOADER_J4_HANDOFF:-0}" = 1 ]; then
-	cp -f "$ROOT/mainline-tools/uniloader/load-kernel.c" "$UL/arch/aarch64/load-kernel.c"
 fi
 
 if [ -n "${PAYLOAD_ENTRY:-}" ]; then

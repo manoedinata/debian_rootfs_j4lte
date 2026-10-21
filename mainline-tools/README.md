@@ -15,7 +15,6 @@ RECOVERY partition and are booted with `reboot recovery`.
 | `ramoops_parse.py` | decode a ramoops dump (with Reed-Solomon ECC) |
 | `ramretain/`, `regpeek/` | downstream-kernel modules: keep/dump a RAM window, read device registers |
 | `clkgen/` | generates `clk-exynos7570.c` and its binding header from the downstream pwrcal tables |
-| `uniloader/load-kernel.c` | uniLoader hand-off with cache maintenance and diagnostics |
 | `logs/` | decoded boot logs and diagnostics of the bring-up |
 
 ## Rules learned the hard way
