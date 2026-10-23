@@ -7,11 +7,16 @@
 #
 # usage: mainline-tools/build.sh [make targets...]   (default: Image + dtb)
 #
+# LINUX / BUILD pick another tree and output dir, e.g. the 6.12 port for OpenWrt:
+#   LINUX=linux-6.12.y BUILD=build-6.12 mainline-tools/build.sh
+#
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONTAINER_NAME="j4-mainline"
 JOBS="${JOBS:-$(nproc)}"
+LINUX="${LINUX:-linux-7.2.y}"
+BUILD="${BUILD:-build-mainline}"
 
 if ! docker container inspect "$CONTAINER_NAME" >/dev/null 2>&1; then
 	echo "error: container $CONTAINER_NAME missing (see mainline-tools/README.md)" >&2
@@ -23,7 +28,7 @@ TARGETS="${*:-Image exynos/exynos7570-j4lte.dtb}"
 
 docker exec -u "$(id -u):$(id -g)" -w /work "$CONTAINER_NAME" bash -c "
 	set -euo pipefail
-	SRC=/work/linux-7.2.y OUT=/work/build-mainline
+	SRC=/work/$LINUX OUT=/work/$BUILD
 	M=\"make -C \$SRC O=\$OUT ARCH=arm64 LLVM=1 -j$JOBS\"
 	if [ ! -f \$OUT/.config ]; then
 		mkdir -p \$OUT
@@ -33,5 +38,5 @@ docker exec -u "$(id -u):$(id -g)" -w /work "$CONTAINER_NAME" bash -c "
 	fi
 	\$M $TARGETS
 "
-echo "==> Image: $ROOT/build-mainline/arch/arm64/boot/Image"
-echo "==> dtb:   $ROOT/build-mainline/arch/arm64/boot/dts/exynos/exynos7570-j4lte.dtb"
+echo "==> Image: $ROOT/$BUILD/arch/arm64/boot/Image"
+echo "==> dtb:   $ROOT/$BUILD/arch/arm64/boot/dts/exynos/exynos7570-j4lte.dtb"

@@ -18,3 +18,7 @@
 	path = linux-7.2.y
 	url = https://github.com/manoedinata/linux.git
 	branch = exynos7570-mainline
+[submodule "linux-6.12.y"]
+	path = linux-6.12.y
+	url = https://github.com/manoedinata/linux.git
+	branch = exynos7570-6.12
