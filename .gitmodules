@@ -22,3 +22,11 @@
 	path = linux-6.12.y
 	url = https://github.com/manoedinata/linux.git
 	branch = exynos7570-6.12
+[submodule "openwrt"]
+	path = openwrt
+	url = https://github.com/manoedinata/openwrt.git
+	branch = j4lte-25.12
+[submodule "openwrt-feed"]
+	path = openwrt-feed
+	url = https://github.com/manoedinata/openwrt-feed-j4lte.git
+	branch = main
