@@ -1,11 +1,36 @@
 #!/bin/sh
-# ExecStartPost of samsungipcd.service: samsungipcd boots the modem first and
-# only then opens its AT port; a legacy pty slave cannot be opened before its
-# master is. Hold the unit in "starting" (ModemManager is ordered after it)
-# until the daemon has the port open, at most 90 s.
+# Hooks of samsungipcd.service around ModemManager.
+#
+# samsungipcd-wait <pid>   (ExecStartPost) samsungipcd boots the modem first
+#   and only then opens its AT port; a legacy pty slave cannot be opened before
+#   its master is. Hold the unit in "starting" (ModemManager is ordered after
+#   it) until the daemon has the port open, at most 90 s. Then announce the
+#   ports to a running ModemManager.
+# samsungipcd-wait --stopped   (ExecStopPost) the daemon is gone (it exits
+#   when the modem crashed). The ports stay the same devices across a
+#   restart, so ModemManager would keep the old modem and its stale bearer
+#   (NetworkManager still "connected", nothing flowing): withdraw them.
+ports="/sys/class/tty/ttyp0 /sys/class/tty/ttyGSM0 /sys/class/tty/ttyGSM1 /sys/class/net/rmnet0"
+
+announce() {
+	systemctl -q is-active ModemManager.service || return 0
+	for d in $ports; do
+		[ -e "$d" ] && udevadm trigger --action="$1" "$d"
+	done
+	return 0
+}
+
+if [ "$1" = --stopped ]; then
+	announce remove
+	exit 0
+fi
+
 pid=$1
 for i in $(seq 1 180); do
-	ls -l /proc/$pid/fd 2>/dev/null | grep -q -E "/dev/(ptyp0|ttygsm-master0)$" && exit 0
+	if ls -l /proc/$pid/fd 2>/dev/null | grep -q -E "/dev/(ptyp0|ttygsm-master0)$"; then
+		announce add
+		exit 0
+	fi
 	kill -0 "$pid" 2>/dev/null || exit 1
 	sleep 0.5
 done

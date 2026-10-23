@@ -17,6 +17,8 @@ SyslogLevel=notice
 ExecStart=/usr/libexec/samsungipcd-start
 # "started" only once the AT port is open, so that ModemManager finds it
 ExecStartPost=/usr/libexec/samsungipcd-wait $MAINPID
+# withdraw the ports from ModemManager whenever the daemon stops (crash restart)
+ExecStopPost=/usr/libexec/samsungipcd-wait --stopped
 TimeoutStartSec=120
 Restart=on-failure
 RestartSec=2

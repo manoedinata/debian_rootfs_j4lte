@@ -12,13 +12,15 @@
 #    sees, picked by samsungipcd-service/samsungipcd-start:
 #      mainline kernel: the legacy pty pair /dev/ptyp0 (samsungipcd) and
 #        /dev/ttyp0 (ModemManager); CONFIG_LEGACY_PTYS, no extra driver.
-#        The modem driver is the modem_if module (linux-7.2.y
-#        drivers/misc/modem_v1), loaded via /etc/modules-load.d; install
-#        the .ko for the running kernel separately.
+#        The modem driver is built into the kernel
+#        (CONFIG_SAMSUNG_MODEM_V1, linux-7.2.y drivers/misc/modem_v1).
 #      downstream 3.18: the ttygsm driver (CONFIG_TTY_GSM_VIRTUAL), ttyGSM0/1
 #        with master nodes /dev/ttygsm-master0/1.
 #    samsungipcd-wait keeps the unit starting until the port is open, so
 #    ModemManager (ordered after it) does not probe a pty without a master.
+#    When the modem crashes samsungipcd exits, the ports are withdrawn from
+#    ModemManager, systemd restarts the daemon (which boots the modem
+#    again) and the ports are announced again: NetworkManager reconnects.
 #  - A udev rule groups the tty(s) and the modem driver's network
 #    interface rmnet0 into one device for ModemManager and ties it to the
 #    samsungipcd plugin (rmnet1-7 and umts_dm0 of the same driver are ignored).
@@ -85,8 +87,6 @@ sudo install -D -o root -g root -m 0755 "$SCRIPT_DIR/samsungipcd-service/samsung
 	"$ROOTFS_DIR/usr/libexec/samsungipcd-wait"
 sudo install -D -o root -g root -m 0644 "$SCRIPT_DIR/samsungipcd-service/samsungipcd.service" \
 	"$ROOTFS_DIR/etc/systemd/system/samsungipcd.service"
-sudo install -d -m 755 "$ROOTFS_DIR/etc/modules-load.d"
-echo modem_if | sudo tee "$ROOTFS_DIR/etc/modules-load.d/modem_if.conf" >/dev/null
 sudo install -d -m 755 "$ROOTFS_DIR/etc/default"
 echo "SAMSUNGIPCD_APN=$APN" | sudo tee "$ROOTFS_DIR/etc/default/samsungipcd" >/dev/null
 sudo install -d -m 755 "$ROOTFS_DIR/etc/systemd/system/multi-user.target.wants"
