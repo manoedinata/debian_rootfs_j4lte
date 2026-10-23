@@ -18,16 +18,9 @@ autoreboot=""
 initwdt=60
 rescue=""
 bootreboot=""
-# j4.ums=<block device>: exported to the USB host as a mass-storage disk next to
-# RNDIS (mainline configfs gadget only). USERDATA belongs to the laptop that
-# boots from it; j4.ums=0 exports nothing.
-ums=/dev/mmcblk0p25
-cmdline_root=/dev/mmcblk0p18
 for arg in $(cat /proc/cmdline 2>/dev/null); do
 	case "$arg" in
 		j4.autoreboot=*) autoreboot="${arg#j4.autoreboot=}" ;;
-		j4.ums=*)        ums="${arg#j4.ums=}" ;;
-		root=*)          cmdline_root="${arg#root=}" ;;
 		j4.bootreboot=*) bootreboot="${arg#j4.bootreboot=}" ;;
 		j4.initwdt=*)    initwdt="${arg#j4.initwdt=}" ;;
 		j4.rescue=*)     rescue="${arg#j4.rescue=}" ;;
@@ -120,50 +113,11 @@ setup_usb_configfs() {
 	echo 'rndis%d' >"$g/functions/rndis.usb0/ifname" 2>/dev/null || log "USB gadget: setting ifname FAILED"
 	echo 7a:50:b5:6f:88:a3 >"$g/functions/rndis.usb0/dev_addr"
 	echo 52:d8:64:70:20:45 >"$g/functions/rndis.usb0/host_addr"
-	# the disk goes first (interface 0): some BIOS USB stacks only look there
-	setup_usb_mass_storage "$g"
 	ln -s "$g/functions/rndis.usb0" "$g/configs/c.1/rndis.usb0"
 	if echo "$udc" >"$g/UDC" 2>/dev/null; then
-		log "USB gadget (rndis0${ums_on:+ + mass storage}) bound to UDC $udc"
+		log "USB gadget (rndis0) bound to UDC $udc"
 	else
 		log "USB gadget: binding to UDC $udc FAILED"
-	fi
-}
-
-# Second function of the configfs gadget: $ums as a raw USB disk. The phone
-# itself never mounts it; exporting the root device would let the host and the
-# phone write the same filesystem, so that is refused.
-ums_on=""
-setup_usb_mass_storage() {
-	g=$1
-	case "$ums" in ""|0|off|none) return ;; esac
-	if [ "$ums" = "$cmdline_root" ]; then
-		log "USB mass storage: $ums is the root device, not exporting it"
-		return
-	fi
-	# eMMC partitions can still be enumerating
-	i=0
-	while [ ! -b "$ums" ] && [ "$i" -lt 30 ]; do
-		sleep 0.5
-		i=$((i + 1))
-	done
-	if [ ! -b "$ums" ]; then
-		log "USB mass storage: $ums missing, not exporting it"
-		return
-	fi
-	f="$g/functions/mass_storage.usb0"
-	mkdir -p "$f" || return
-	echo 1 >"$f/stall"
-	echo 1 >"$f/lun.0/removable"
-	echo 0 >"$f/lun.0/ro"
-	echo "Samsung J4 USERDATA" >"$f/lun.0/inquiry_string"	# vendor(8) product(16)
-	if echo "$ums" >"$f/lun.0/file" 2>/dev/null; then
-		ln -s "$f" "$g/configs/c.1/mass_storage.usb0"
-		ums_on=1
-		log "USB mass storage: exporting $ums"
-	else
-		log "USB mass storage: opening $ums FAILED"
-		rmdir "$f" 2>/dev/null
 	fi
 }
 
@@ -195,7 +149,7 @@ setup_usb_network() {
 setup_usb_network
 
 # Root is SYSTEM (mmcblk0p18), flashed from misc-files/system.img (see
-# build_system_img.sh). USERDATA is the laptop disk (j4.ums above).
+# build_system_img.sh).
 # An explicit root= on the kernel cmdline overrides this.
 root=/dev/mmcblk0p18
 fallback_root=""
