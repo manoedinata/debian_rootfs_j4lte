@@ -1,7 +1,14 @@
-# samsungipcd modem, handled by the samsungipcd ModemManager plugin:
-# one modem made of two AT ports (kernel ttygsm driver) and the network
-# interface of the modem driver (rmnet0) as its data port: static IP, no PPP.
+# samsungipcd modem, handled by the samsungipcd ModemManager plugin: AT port(s)
+# served by samsungipcd plus the modem driver's network interface rmnet0 as the
+# data port (static IP, no PPP).
+#  - mainline kernel: one AT port, the legacy pty slave ttyp0 (samsungipcd runs
+#    on the master /dev/ptyp0)
+#  - downstream 3.18 kernel: the ttygsm driver's ttyGSM0/1
 ACTION!="add|change|move|bind", GOTO="mm_samsungipcd_end"
+
+SUBSYSTEM=="tty", KERNEL=="ttyp0", ENV{ID_MM_PHYSDEV_UID}="samsungipcd", ENV{ID_MM_SAMSUNGIPCD}="1", ENV{ID_MM_PORT_TYPE_AT_PRIMARY}="1"
+# the modem's AT port: not for every local user
+SUBSYSTEM=="tty", KERNEL=="ttyp0|ptyp0", GROUP="dialout", MODE="0660"
 
 SUBSYSTEM=="tty", KERNEL=="ttyGSM[0-9]*", ENV{ID_MM_PHYSDEV_UID}="samsungipcd", ENV{ID_MM_SAMSUNGIPCD}="1"
 SUBSYSTEM=="tty", KERNEL=="ttyGSM0", ENV{ID_MM_PORT_TYPE_AT_PRIMARY}="1"

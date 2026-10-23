@@ -1,0 +1,25 @@
+[Unit]
+Description=Samsung IPC modem daemon (ss310ap/herolte profile), AT port for ModemManager
+# the modem boot reads the NV data from /efs; without this the first start races the mount and fails
+RequiresMountsFor=/efs
+# mainline: the modem driver is the modem_if module (modules-load.d)
+After=systemd-modules-load.service
+# ModemManager probes the ports once, when it sees them; samsungipcd has to be
+# answering by then or it gives up on them until the next rescan
+Before=ModemManager.service
+
+[Service]
+# SAMSUNGIPCD_APN: the APN to attach to LTE with as soon as the modem is ready
+EnvironmentFile=-/etc/default/samsungipcd
+# SyslogLevel: journald.conf here only stores notice and above, the
+# daemon's printf output would be dropped otherwise
+SyslogLevel=notice
+ExecStart=/usr/libexec/samsungipcd-start
+# "started" only once the AT port is open, so that ModemManager finds it
+ExecStartPost=/usr/libexec/samsungipcd-wait $MAINPID
+TimeoutStartSec=120
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

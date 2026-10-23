@@ -1,0 +1,13 @@
+#!/bin/sh
+# ExecStartPost of samsungipcd.service: samsungipcd boots the modem first and
+# only then opens its AT port; a legacy pty slave cannot be opened before its
+# master is. Hold the unit in "starting" (ModemManager is ordered after it)
+# until the daemon has the port open, at most 90 s.
+pid=$1
+for i in $(seq 1 180); do
+	ls -l /proc/$pid/fd 2>/dev/null | grep -q -E "/dev/(ptyp0|ttygsm-master0)$" && exit 0
+	kill -0 "$pid" 2>/dev/null || exit 1
+	sleep 0.5
+done
+echo "samsungipcd did not open its AT port in 90 s" >&2
+exit 1

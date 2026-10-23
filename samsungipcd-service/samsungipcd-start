@@ -1,0 +1,9 @@
+#!/bin/sh
+# Starts samsungipcd on the AT port the running kernel offers: the downstream
+# ttygsm driver's master nodes, or else (mainline) the legacy pty /dev/ptyp0.
+if [ -e /dev/ttygsm-master0 ]; then
+	set -- /dev/ttygsm-master0 /dev/ttygsm-master1
+else
+	set -- /dev/ptyp0
+fi
+exec /usr/bin/stdbuf -oL -eL /usr/sbin/samsungipcd "$@"

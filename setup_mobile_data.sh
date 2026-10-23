@@ -6,13 +6,20 @@
 #
 # How the pieces fit (see memory/todo_mobile_data_modemmanager.md):
 #
-#  - The kernel (CONFIG_TTY_GSM_VIRTUAL, drivers/tty/ttygsm.c) registers
-#    /dev/ttyGSM0 and /dev/ttyGSM1 as real tty devices plus master nodes
-#    /dev/ttygsm-master0/1. samsungipcd opens the master nodes and
-#    emulates a modem's AT interface on them on top of Samsung's IPC
+#  - samsungipcd emulates a modem's AT interface on top of Samsung's IPC
 #    protocol (boots the J4's modem from the RADIO partition via the
-#    herolte/Shannon profile of libsamsung-ipc).
-#  - A udev rule groups the two ttys and the modem driver's network
+#    herolte/Shannon profile of libsamsung-ipc) on a tty that ModemManager
+#    sees, picked by samsungipcd-service/samsungipcd-start:
+#      mainline kernel: the legacy pty pair /dev/ptyp0 (samsungipcd) and
+#        /dev/ttyp0 (ModemManager); CONFIG_LEGACY_PTYS, no extra driver.
+#        The modem driver is the modem_if module (linux-7.2.y
+#        drivers/misc/modem_v1), loaded via /etc/modules-load.d; install
+#        the .ko for the running kernel separately.
+#      downstream 3.18: the ttygsm driver (CONFIG_TTY_GSM_VIRTUAL), ttyGSM0/1
+#        with master nodes /dev/ttygsm-master0/1.
+#    samsungipcd-wait keeps the unit starting until the port is open, so
+#    ModemManager (ordered after it) does not probe a pty without a master.
+#  - A udev rule groups the tty(s) and the modem driver's network
 #    interface rmnet0 into one device for ModemManager and ties it to the
 #    samsungipcd plugin (rmnet1-7 and umts_dm0 of the same driver are ignored).
 #  - The samsungipcd ModemManager plugin (mm-plugin-samsungipcd/, built by
@@ -72,30 +79,14 @@ echo "==> installing the samsungipcd ModemManager plugin"
 sudo install -D -o root -g root -m 0755 "$PLUGIN_SO" "$PLUGIN_DIR/libmm-plugin-samsungipcd.so"
 
 echo "==> installing samsungipcd.service (enabled)"
-sudo install -d -m 755 "$ROOTFS_DIR/etc/systemd/system"
-sudo tee "$ROOTFS_DIR/etc/systemd/system/samsungipcd.service" >/dev/null <<'EOF'
-[Unit]
-Description=Samsung IPC modem AT command proxy (ss310ap/herolte profile)
-# the modem boot reads the NV data from /efs; without this the first start races the mount and fails
-RequiresMountsFor=/efs
-# ModemManager probes the ports once, when it sees them; samsungipcd has to be
-# answering by then or it gives up on them until the next rescan
-Before=ModemManager.service
-
-[Service]
-# SAMSUNGIPCD_APN: the APN to attach to LTE with as soon as the modem is ready (written below)
-EnvironmentFile=-/etc/default/samsungipcd
-# stdbuf: stdout is a pipe under systemd, so it would be block buffered
-# SyslogLevel: journald.conf here only stores notice and above, the
-# daemon's printf output would be dropped otherwise
-SyslogLevel=notice
-ExecStart=/usr/bin/stdbuf -oL -eL /usr/sbin/samsungipcd /dev/ttygsm-master0 /dev/ttygsm-master1
-Restart=on-failure
-RestartSec=2
-
-[Install]
-WantedBy=multi-user.target
-EOF
+sudo install -D -o root -g root -m 0755 "$SCRIPT_DIR/samsungipcd-service/samsungipcd-start" \
+	"$ROOTFS_DIR/usr/libexec/samsungipcd-start"
+sudo install -D -o root -g root -m 0755 "$SCRIPT_DIR/samsungipcd-service/samsungipcd-wait" \
+	"$ROOTFS_DIR/usr/libexec/samsungipcd-wait"
+sudo install -D -o root -g root -m 0644 "$SCRIPT_DIR/samsungipcd-service/samsungipcd.service" \
+	"$ROOTFS_DIR/etc/systemd/system/samsungipcd.service"
+sudo install -d -m 755 "$ROOTFS_DIR/etc/modules-load.d"
+echo modem_if | sudo tee "$ROOTFS_DIR/etc/modules-load.d/modem_if.conf" >/dev/null
 sudo install -d -m 755 "$ROOTFS_DIR/etc/default"
 echo "SAMSUNGIPCD_APN=$APN" | sudo tee "$ROOTFS_DIR/etc/default/samsungipcd" >/dev/null
 sudo install -d -m 755 "$ROOTFS_DIR/etc/systemd/system/multi-user.target.wants"
