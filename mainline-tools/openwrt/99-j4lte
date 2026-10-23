@@ -1,0 +1,20 @@
+#!/bin/sh
+# Galaxy J4: the only link is the USB RNDIS gadget (rndis0, set up by the
+# boot initramfs). Same address as the Debian side so the host keeps working.
+uci -q batch <<'EOT'
+set network.lan.device='rndis0'
+set network.lan.proto='static'
+set network.lan.ipaddr='172.16.42.1'
+set network.lan.netmask='255.255.255.0'
+delete network.wan
+delete network.wan6
+set dhcp.lan.start='2'
+set dhcp.lan.limit='10'
+set system.@system[0].hostname='j4lte'
+commit network
+commit dhcp
+commit system
+EOT
+# armsr defaults point the lan bridge at eth0; drop it
+uci -q delete network.@device[0] && uci commit network
+exit 0

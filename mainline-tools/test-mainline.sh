@@ -45,8 +45,10 @@ do_flash() {
 	local size want got rb
 	size=$(stat -c %s "$IMG"); want=$(sha256sum "$IMG" | cut -c1-64)
 	[ "$size" -le "$DEVSIZE" ] || { echo "error: image larger than the $SLOT partition" >&2; exit 1; }
-	[ "$(ssh_q "blockdev --getsize64 $DEV")" = "$DEVSIZE" ] || { echo "error: $DEV is not the $SLOT partition" >&2; exit 1; }
-	scp -q -o BatchMode=yes "$IMG" "$HOST:/tmp/mainline-test.img"
+	# sysfs size (512-byte sectors): OpenWrt has no blockdev
+	[ "$(ssh_q "echo \$((\$(cat /sys/class/block/${DEV#/dev/}/size) * 512))")" = "$DEVSIZE" ] || { echo "error: $DEV is not the $SLOT partition" >&2; exit 1; }
+	# plain ssh, not scp: OpenWrt has no sftp-server
+	ssh_q "cat > /tmp/mainline-test.img" < "$IMG"
 	got=$(ssh_q "sha256sum /tmp/mainline-test.img | cut -c1-64")
 	[ "$got" = "$want" ] || { echo "transfer mismatch" >&2; exit 1; }
 	rb=$(ssh_q "dd if=/tmp/mainline-test.img of=$DEV bs=1M conv=fsync 2>/dev/null; sync; dd if=$DEV bs=1M 2>/dev/null | head -c $size | sha256sum | cut -c1-64")

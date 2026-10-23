@@ -16,6 +16,7 @@ RECOVERY partition and are booted with `reboot recovery`.
 | `ramretain/`, `regpeek/` | downstream-kernel modules: keep/dump a RAM window, read device registers |
 | `clkgen/` | generates `clk-exynos7570.c` and its binding header from the downstream pwrcal tables |
 | `logs/` | decoded boot logs and diagnostics of the bring-up |
+| `openwrt/99-j4lte` | uci-defaults for the OpenWrt rootfs on p25 (lan on rndis0, 172.16.42.1/24); boot image: `KERNEL_GZIP=1 BOOTARGS_REMOVE="root=/dev/mmcblk0p18" BOOTARGS_EXTRA="root=/dev/mmcblk0p25" ./pack.sh ../build-mainline/boot-openwrt-gz.img` |
 
 ## Rules learned the hard way
 

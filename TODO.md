@@ -27,6 +27,13 @@ Status as of 2026-10-20.
   - cold start without the bootloader's picture.
 - Fuel gauge cycle counter: untested across full power-off and a real discharge.
 
+- uniLoader gzip kernel (`KERNEL_GZIP=1`): boots (2026-10-24, after building all of
+  uniLoader with `-mstrict-align`), but inflating is very slow. With the MMU off, every
+  data access is Device-type (uncached), and the decoder works byte by byte. Fix: in
+  uniLoader, enable the MMU with an identity map (DRAM as Normal cacheable) before
+  inflating, and clean/invalidate caches and turn it off again before jumping to the
+  kernel.
+
 ## Open bugs
 
 - **Large `apt-get install` runs corrupt data on mainline** (biggest). Cause unknown;
