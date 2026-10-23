@@ -244,3 +244,8 @@ downstream driver drivers/misc/usim_det), building it in-tree.
 - Fix verified: the crash came after the SECOND delivery report each time (run 1: different
   SMS, run 2: re-delivered SMS). samsungipcd now echoes the incoming type (01) and zeroes the
   struct: report `01 00 00 01 00`; 5 SMS in a row acked, no crash.
+- `umts_router` AT next to samsungipcd is NOT usable as a second master: after samsungipcd
+  deactivated cid 1 the router still reported `+CGACT: 1,1` with the old address; router
+  `AT+CGACT=0,1` then never answered and the router AT parser stayed dead (no reply to `AT`
+  for >60 s), the modem briefly lost registration (+CREG 1,0) and came back, no CP crash.
+  Router-only control is not an option either: CP boot, RFS (NV) and SMS need the IPC side.
