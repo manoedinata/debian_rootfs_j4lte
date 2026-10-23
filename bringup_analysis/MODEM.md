@@ -209,3 +209,38 @@ mif_pdata needs the board dts `reg = <0 0x10000 0x0>` (MAIN offset, syscp_info).
 Left: ttygsm (downstream TTY_GSM_VIRTUAL) for samsungipcd's AT ports, the ModemManager
 plugin path, rmnet data, the usim_det SIM-detect pins (gpa1-4/gpa2-4 func 15, separate
 downstream driver drivers/misc/usim_det), building it in-tree.
+
+## CP AT on umts_router + rmnet0 data (2026-10-23)
+
+- `/dev/umts_router` (iod id 25, "Data Router") is the CP's own AT parser: AT/ATI/AT+CGMI/
+  AT+CGMR (J400FXXS9CVE4)/CPIN/CREG/CEREG/COPS/CSQ/CGDCONT/CGATT/CGACT/CGPADDR all answer
+  (probe: perl atprobe.pl, scratch). LTE attach and `AT+CGACT=1,1` work there (address via
+  CGPADDR); its `+CGCONTRDP` reply is mangled (`1,5,"internet","76.146.121.70"`, no DNS).
+  Ping 1.1.1.1 over rmnet0 with that context: tx only, rx 0 — NOT conclusive (see below).
+- Same test with the PDP activated over IPC by samsungipcd (AT on its CUSE port; mainline
+  needs fuse.ko + cuse.ko, CONFIG_CUSE=m): ping 1.1.1.1 still 0/3, but a DNS query to the
+  carrier DNS 192.168.141.29 over rmnet0 is answered -> **rmnet0 data path works on
+  mainline both ways**. The failing ping is probably the SIM having no data quota (user
+  suspects so; unverified).
+- Open: repeat the AT-activated context test with the carrier DNS query to learn whether an
+  AT context is bound to rmnet0.
+
+## Data works with a data plan; CP crash on incoming SMS (2026-10-23)
+
+- With a data plan: samsungipcd (CUSE AT port) `AT+CGACT=1,1` (after LTE registration; the
+  first try times out as known) -> 10.20.170.243 on rmnet0 -> ping 1.1.1.1 5/5, avg 52 ms.
+  Deactivate + reactivate in one session OK.
+- FIXED (samsungipcd, see below). CP crashed (`shmem<-ss305ap: ERR! CP_CRASH_EXIT`) twice, both right after an incoming SMS
+  (the carrier's package SMS, `+CMTI`). Second time, from the on-disk log:
+  RX 0x0402 IPC_SMS_INCOMING_MSG -> 4 ms later samsungipcd TX 0x0406 IPC_SMS_DELIVER_REPORT
+  EXEC `02 00 00 01 ff` (type STATUS_REPORT, ack 0, id 1, `unknown` uninitialised = 0xff;
+  libsamsung-ipc's 5-byte layout from older Samsung modems) -> CP 0x0406 reply ->
+  CRASH_EXIT 45 ms later. Suspect: that delivery report (inference; needs a test SMS with and
+  without the report). A `umts_router` AT+CGACT=0,1 was 2 s earlier, so not ruled out yet.
+- The poll spam (47k lines that pushed the crash out of the journal): samsungipcd ignores
+  POLLHUP and loops; misc_poll's state messages are now ratelimited.
+- After a crash the router AT test stays undecided: router `+CGACT: 1,1` but CGPADDR 0.0.0.0
+  right after the IPC side deactivated cid 1.
+- Fix verified: the crash came after the SECOND delivery report each time (run 1: different
+  SMS, run 2: re-delivered SMS). samsungipcd now echoes the incoming type (01) and zeroes the
+  struct: report `01 00 00 01 00`; 5 SMS in a row acked, no crash.
