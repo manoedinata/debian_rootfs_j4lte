@@ -40,6 +40,16 @@ Status as of 2026-10-20.
   suspects: HS400 under writeback, DMA cache coherency, reserved-memory overlap with
   the secure world, CPU frequency/voltage left by S-BOOT.
 
+## OpenWrt / modem
+
+- **LTE band selection/locking** (asked 2026-10-25, wanted luci-app-modemband). That app
+  cannot work here: it needs a USB modem from obsy's `modemband` list driven by vendor AT
+  commands, and its README says it does not work alongside ModemManager. Our Shannon
+  modem speaks Samsung IPC through samsungipcd, which has no band AT commands. Plan:
+  decode the band-selection IPC message from the stock RIL (libsec-ril, same way as the
+  data-call layouts), add an AT command for it to samsungipcd, then a small LuCI page
+  or a modemband-style script on top.
+
 ## Already working
 
 4 CPU cores, clocks, pinctrl, PMIC (regulators, RTC, power key, charger, fuel gauge),
