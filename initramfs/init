@@ -113,7 +113,18 @@ setup_usb_configfs() {
 	echo 'rndis%d' >"$g/functions/rndis.usb0/ifname" 2>/dev/null || log "USB gadget: setting ifname FAILED"
 	echo 7a:50:b5:6f:88:a3 >"$g/functions/rndis.usb0/dev_addr"
 	echo 52:d8:64:70:20:45 >"$g/functions/rndis.usb0/host_addr"
+	# Windows only binds its built-in RNDIS driver through the Microsoft OS
+	# descriptor compatible ID; the function's 02/02/ff interface class matches
+	# nothing there. Windows caches the descriptor query per VID/PID/bcdDevice,
+	# so bcdDevice also moves off the earlier value it saw without one.
+	echo 0x0101 >"$g/bcdDevice"
+	echo 1 >"$g/os_desc/use"
+	echo 0xcd >"$g/os_desc/b_vendor_code"
+	echo MSFT100 >"$g/os_desc/qw_sign"
+	echo RNDIS >"$g/functions/rndis.usb0/os_desc/interface.rndis/compatible_id"
+	echo 5162001 >"$g/functions/rndis.usb0/os_desc/interface.rndis/sub_compatible_id"
 	ln -s "$g/functions/rndis.usb0" "$g/configs/c.1/rndis.usb0"
+	ln -s "$g/configs/c.1" "$g/os_desc/c.1"
 	if echo "$udc" >"$g/UDC" 2>/dev/null; then
 		log "USB gadget (rndis0) bound to UDC $udc"
 	else
@@ -148,10 +159,10 @@ setup_usb_network() {
 }
 setup_usb_network
 
-# Root is SYSTEM (mmcblk0p18), flashed from misc-files/system.img (see
-# build_system_img.sh).
+# Root is USERDATA (mmcblk0p25), where Debian lives; OpenWrt is on SYSTEM
+# (mmcblk0p18) and passes root= itself.
 # An explicit root= on the kernel cmdline overrides this.
-root=/dev/mmcblk0p18
+root=/dev/mmcblk0p25
 fallback_root=""
 rootfstype=ext4
 rootflags=rw
