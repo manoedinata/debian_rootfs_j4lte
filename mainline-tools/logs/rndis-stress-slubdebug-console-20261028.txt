@@ -1,0 +1,913 @@
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
+[    0.000000] Linux version 6.12.112 (root@54ea7c7f7b77) (aarch64-openwrt-linux-musl-gcc (OpenWrt GCC 14.3.0 r33311-981c978eff) 14.3.0, GNU ld (GNU Binutils) 2.44) #0 SMP PREEMPT Sat Oct 17 21:45:38 2026
+[    0.000000] KASLR disabled due to lack of seed
+[    0.000000] Machine model: Samsung Galaxy J4
+[    0.000000] printk: debug: ignoring loglevel setting.
+[    0.000000] efi: UEFI not found.
+[    0.000000] OF: reserved mem: 0x000000007e100000..0x000000007e27ffff (1536 KiB) nomap non-reusable ramoops@7e100000
+[    0.000000] OF: reserved mem: 0x000000007e280000..0x000000007e2fffff (512 KiB) nomap non-reusable bootloader-scratch@7e280000
+[    0.000000] OF: reserved mem: 0x0000000067000000..0x0000000067383fff (3600 KiB) nomap non-reusable framebuffer@67000000
+[    0.000000] OF: reserved mem: 0x0000000052800000..0x00000000529fffff (2048 KiB) nomap non-reusable tima@52800000
+[    0.000000] OF: reserved mem: 0x00000000710ef000..0x00000000710effff (4 KiB) nomap non-reusable camera@710ef000
+[    0.000000] OF: reserved mem: 0x00000000710f0000..0x00000000711fffff (1088 KiB) nomap non-reusable video-fw@710f0000
+[    0.000000] OF: reserved mem: 0x0000000072200000..0x00000000733fffff (18432 KiB) nomap non-reusable video-stream@72200000
+[    0.000000] OF: reserved mem: 0x0000000073400000..0x0000000078ffffff (94208 KiB) nomap non-reusable modem@73400000
+[    0.000000] OF: reserved mem: 0x0000000079000000..0x00000000793fffff (4096 KiB) nomap non-reusable wifibt@79000000
+[    0.000000] NUMA: Faking a node at [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000] NODE_DATA(0) allocated [mem 0xbfc26880-0xbfc28ebf]
+[    0.000000] Zone ranges:
+[    0.000000]   DMA      [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000]   DMA32    empty
+[    0.000000]   Normal   empty
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000040000000-0x00000000527fffff]
+[    0.000000]   node   0: [mem 0x0000000052800000-0x00000000529fffff]
+[    0.000000]   node   0: [mem 0x0000000052a00000-0x0000000066ffffff]
+[    0.000000]   node   0: [mem 0x0000000067000000-0x0000000067383fff]
+[    0.000000]   node   0: [mem 0x0000000067384000-0x00000000710eefff]
+[    0.000000]   node   0: [mem 0x00000000710ef000-0x00000000711fffff]
+[    0.000000]   node   0: [mem 0x0000000071200000-0x00000000721fffff]
+[    0.000000]   node   0: [mem 0x0000000072200000-0x00000000793fffff]
+[    0.000000]   node   0: [mem 0x0000000079400000-0x000000007e0fffff]
+[    0.000000]   node   0: [mem 0x000000007e100000-0x000000007e2fffff]
+[    0.000000]   node   0: [mem 0x000000007e300000-0x000000007e7fffff]
+[    0.000000]   node   0: [mem 0x0000000080000000-0x00000000bfffffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000] On node 0, zone DMA: 6144 pages in unavailable ranges
+[    0.000000] cma: Reserved 32 MiB at 0x00000000bbc00000 on node -1
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: Using PSCI v0.1 Function IDs from DT
+[    0.000000] percpu: Embedded 24 pages/cpu s59992 r8192 d30120 u98304
+[    0.000000] pcpu-alloc: s59992 r8192 d30120 u98304 alloc=24*4096
+[    0.000000] pcpu-alloc: [0] 0 [0] 1 [0] 2 [0] 3 
+[    0.000000] Detected VIPT I-cache on CPU0
+[    0.000000] CPU features: detected: ARM erratum 845719
+[    0.000000] alternatives: applying boot alternatives
+[    0.000000] Kernel command line: console=tty0 ignore_loglevel clk_ignore_unused regulator_ignore_unused root=/dev/mmcblk0p18 rootfstype=ext4 slub_debug=FZPU,skbuff_head_cache,skbuff_fclone_cache,skbuff_small_head
+[    0.000000] Dentry cache hash table entries: 262144 (order: 9, 2097152 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+[    0.000000] Fallback order for Node 0: 0 
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 518144
+[    0.000000] Policy zone: DMA
+[    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+[    0.000000] stackdepot: allocating hash table via alloc_large_system_hash
+[    0.000000] stackdepot hash table entries: 131072 (order: 9, 2097152 bytes, linear)
+[    0.000000] software IO TLB: SWIOTLB bounce buffer size adjusted to 1MB
+[    0.000000] software IO TLB: area num 4.
+[    0.000000] software IO TLB: mapped [mem 0x00000000bb4a0000-0x00000000bb6a0000] (2MB)
+[    0.000000] **********************************************************
+[    0.000000] **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
+[    0.000000] **                                                      **
+[    0.000000] ** This system shows unhashed kernel memory addresses   **
+[    0.000000] ** via the console, logs, and other interfaces. This    **
+[    0.000000] ** might reduce the security of your system.            **
+[    0.000000] **                                                      **
+[    0.000000] ** If you see this message and you are not debugging    **
+[    0.000000] ** the kernel, report this immediately to your system   **
+[    0.000000] ** administrator!                                       **
+[    0.000000] **                                                      **
+[    0.000000] **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
+[    0.000000] **********************************************************
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+[    0.000000] rcu: Preemptible hierarchical RCU implementation.
+[    0.000000] rcu: 	RCU event tracing is enabled.
+[    0.000000] rcu: 	RCU restricting CPUs from NR_CPUS=512 to nr_cpu_ids=4.
+[    0.000000] 	Trampoline variant of Tasks RCU enabled.
+[    0.000000] 	Tracing variant of Tasks RCU enabled.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=4
+[    0.000000] RCU Tasks: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
+[    0.000000] RCU Tasks Trace: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
+[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[    0.000000] Root IRQ handler: gic_handle_irq
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.000000] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.000000] arch_timer: cp15 timer(s) running at 26.00MHz (virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x5ff13d5a9, max_idle_ns: 440795202370 ns
+[    0.000000] sched_clock: 56 bits at 26MHz, resolution 38ns, wraps every 4398046511088ns
+[    0.000129] Console: colour dummy device 80x25
+[    0.000139] printk: legacy console [tty0] enabled
+[    0.000795] Calibrating delay loop (skipped), value calculated using timer frequency.. 52.00 BogoMIPS (lpj=104000)
+[    0.000817] pid_max: default: 32768 minimum: 301
+[    0.000964] Mount-cache hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[    0.000989] Mountpoint-cache hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[    0.002803] rcu: Hierarchical SRCU implementation.
+[    0.002830] rcu: 	Max phase no-delay instances is 1000.
+[    0.002997] Timer migration: 1 hierarchy levels; 8 children per group; 1 crossnode level
+[    0.003130] EFI services will not be available.
+[    0.003305] smp: Bringing up secondary CPUs ...
+[    0.003746] Detected VIPT I-cache on CPU1
+[    0.003826] CPU1: Booted secondary processor 0x0000000001 [0x410fd034]
+[    0.004401] Detected VIPT I-cache on CPU2
+[    0.004453] CPU2: Booted secondary processor 0x0000000002 [0x410fd034]
+[    0.004934] Detected VIPT I-cache on CPU3
+[    0.004980] CPU3: Booted secondary processor 0x0000000003 [0x410fd034]
+[    0.005077] smp: Brought up 1 node, 4 CPUs
+[    0.005132] SMP: Total of 4 processors activated.
+[    0.005142] CPU: All CPU(s) started at EL1
+[    0.005168] CPU features: detected: 32-bit EL0 Support
+[    0.005178] CPU features: detected: 32-bit EL1 Support
+[    0.005190] CPU features: detected: CRC32 instructions
+[    0.005232] alternatives: applying system-wide alternatives
+[    0.006251] Memory: 1839672K/2072576K available (14208K kernel code, 1338K rwdata, 5144K rodata, 1920K init, 1699K bss, 195904K reserved, 32768K cma-reserved)
+[    0.006840] devtmpfs: initialized
+[    0.011310] futex hash table entries: 1024 (order: 4, 65536 bytes, linear)
+[    0.013228] 26624 pages in range for non-PLT usage
+[    0.013248] 518144 pages in range for PLT usage
+[    0.013379] pinctrl core: initialized pinctrl subsystem
+[    0.014109] DMI not present or invalid.
+[    0.016111] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.017200] DMA: preallocated 256 KiB GFP_KERNEL pool for atomic allocations
+[    0.017772] DMA: preallocated 256 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[    0.018456] DMA: preallocated 256 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[    0.019363] thermal_sys: Registered thermal governor 'step_wise'
+[    0.019369] thermal_sys: Registered thermal governor 'power_allocator'
+[    0.019427] cpuidle: using governor menu
+[    0.019619] ASID allocator initialised with 65536 entries
+[    0.019804] Serial: AMBA PL011 UART driver
+[    0.402937] pstore: Using crash dump compression: deflate
+[    0.402958] printk: legacy console [ramoops-1] enabled
+[    0.413677] pstore: Registered ramoops as persistent store backend
+[    0.413745] ramoops: using 0x180000@0x7e100000, ecc: 16
+[    0.416679] /soc@0/interrupt-controller@104e1000: Fixed dependency cycle(s) with /soc@0/interrupt-controller@104e1000
+[    0.416893] /soc@0/display-controller@14830000: Fixed dependency cycle(s) with /soc@0/dsi@14800000
+[    0.416981] /soc@0/dsi@14800000: Fixed dependency cycle(s) with /soc@0/display-controller@14830000
+[    0.434902] /soc@0/display-controller@14830000: Fixed dependency cycle(s) with /soc@0/dsi@14800000
+[    0.435261] /soc@0/display-controller@14830000: Fixed dependency cycle(s) with /soc@0/dsi@14800000
+[    0.435422] /soc@0/dsi@14800000: Fixed dependency cycle(s) with /soc@0/display-controller@14830000
+[    0.438087] HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.438178] HugeTLB: 0 KiB vmemmap can be freed for a 1.00 GiB page
+[    0.438292] HugeTLB: registered 32.0 MiB page size, pre-allocated 0 pages
+[    0.438358] HugeTLB: 0 KiB vmemmap can be freed for a 32.0 MiB page
+[    0.438471] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.438537] HugeTLB: 0 KiB vmemmap can be freed for a 2.00 MiB page
+[    0.438650] HugeTLB: registered 64.0 KiB page size, pre-allocated 0 pages
+[    0.438762] HugeTLB: 0 KiB vmemmap can be freed for a 64.0 KiB page
+[    0.440242] ACPI: Interpreter disabled.
+[    0.440778] iommu: Default domain type: Translated
+[    0.440897] iommu: DMA domain TLB invalidation policy: strict mode
+[    0.441306] SCSI subsystem initialized
+[    0.441531] libata version 3.00 loaded.
+[    0.441762] usbcore: registered new interface driver usbfs
+[    0.441899] usbcore: registered new interface driver hub
+[    0.441984] usbcore: registered new device driver usb
+[    0.442430] s3c-i2c 13840000.i2c: slave address 0x00
+[    0.442547] s3c-i2c 13840000.i2c: bus frequency set to 65 KHz
+[    0.443059] s3c-i2c 13840000.i2c: i2c-0: S3C I2C adapter
+[    0.443546] s3c-i2c 13880000.i2c: slave address 0x00
+[    0.443617] s3c-i2c 13880000.i2c: bus frequency set to 65 KHz
+[    0.444063] s3c-i2c 13880000.i2c: i2c-1: S3C I2C adapter
+[    0.444468] pps_core: LinuxPPS API ver. 1 registered
+[    0.444582] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.444732] PTP clock support registered
+[    0.444852] EDAC MC: Ver: 3.0.0
+[    0.445195] scmi_core: SCMI protocol bus registered
+[    0.633031] sm5502 1-0014: Device type: version: 0x2, vendor: 0x1
+[    0.657379] FPGA manager framework
+[    0.658256] vgaarb: loaded
+[    0.658713] clocksource: Switched to clocksource arch_sys_counter
+[    0.658989] VFS: Disk quotas dquot_6.6.0
+[    0.659116] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    0.659464] pnp: PnP ACPI: disabled
+[    0.664803] NET: Registered PF_INET protocol family
+[    0.665096] IP idents hash table entries: 32768 (order: 6, 262144 bytes, linear)
+[    0.666653] tcp_listen_portaddr_hash hash table entries: 1024 (order: 2, 16384 bytes, linear)
+[    0.666795] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.666920] TCP established hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.667129] TCP bind hash table entries: 16384 (order: 7, 524288 bytes, linear)
+[    0.667612] TCP: Hash tables configured (established 16384 bind 16384)
+[    0.668025] MPTCP token hash table entries: 2048 (order: 4, 49152 bytes, linear)
+[    0.668212] UDP hash table entries: 1024 (order: 3, 32768 bytes, linear)
+[    0.668314] UDP-Lite hash table entries: 1024 (order: 3, 32768 bytes, linear)
+[    0.668584] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    0.669022] RPC: Registered named UNIX socket transport module.
+[    0.669138] RPC: Registered udp transport module.
+[    0.669202] RPC: Registered tcp transport module.
+[    0.669312] RPC: Registered tcp-with-tls transport module.
+[    0.669376] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    0.669498] PCI: CLS 0 bytes, default 64
+[    0.669708] Unpacking initramfs...
+[    0.674823] kvm [1]: HYP mode not available
+[    0.675855] Initialise system trusted keyrings
+[    0.676122] workingset: timestamp_bits=42 max_order=19 bucket_order=0
+[    0.676523] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.676816] NFS: Registering the id_resolver key type
+[    0.676952] Key type id_resolver registered
+[    0.677016] Key type id_legacy registered
+[    0.704379] Freeing initrd memory: 932K
+[    0.727255] Key type asymmetric registered
+[    0.727328] Asymmetric key parser 'x509' registered
+[    0.727538] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 244)
+[    0.727769] io scheduler mq-deadline registered
+[    0.727883] io scheduler kyber registered
+[    0.727974] io scheduler bfq registered
+[    0.728449] samsung-pinctrl 139f0000.pinctrl: Failed to create device link (0x180) with soc@0
+[    0.729428] exynos5_usb3drd_phy 135c0000.phy: supply vbus not found, using dummy regulator
+[    0.729622] exynos5_usb3drd_phy 135c0000.phy: supply vbus-boost not found, using dummy regulator
+[    0.730927] ledtrig-cpu: registered to indicate activity on CPUs
+[    0.732602] exynos-clkout exynos-clkout: cannot match parent device
+[    0.732731] exynos-clkout exynos-clkout: probe with driver exynos-clkout failed with error -22
+[    0.733212] exynos-chipid 10100000.chipid: Exynos: CPU[EXYNOS7570] PRO_ID[0xe7570000] REV[0x2] Detected
+[    0.737792] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[    0.740615] exynos-decon 14830000.display-controller: Adding to iommu group 0
+[    0.741467] exynos-dsi 14800000.dsi: supply vddcore not found, using dummy regulator
+[    0.742684] panfrost 11400000.gpu: clock rate = 349375000
+[    0.742862] panfrost 11400000.gpu: error -ENODEV: _opp_set_regulators: no regulator (mali) found
+[    0.742972] panfrost 11400000.gpu: supply mali not found, using dummy regulator
+[    0.743234] panfrost 11400000.gpu: mali-t720 id 0x720 major 0x1 minor 0x1 status 0x0
+[    0.743356] panfrost 11400000.gpu: features: 00000000,00000408, issues: 00000000,21054400
+[    0.743428] panfrost 11400000.gpu: Features: L2:0x070f0206 Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002821 AS:0xf JS:0x7
+[    0.743549] panfrost 11400000.gpu: shader_present=0x1 l2_present=0x1
+[    0.744622] [drm] Initialized panfrost 1.2.0 for 11400000.gpu on minor 0
+[    0.749330] loop: module loaded
+[    0.749595] mcu_ipc 10500000.mailbox: mcu_ipc_probe: mcu_ipc probe start.
+[    0.749816] mcu_ipc 10500000.mailbox: mcu_ipc_probe: mcu_ipc probe done.
+[    0.750229] shm_ipc shmem: shm_probe: shmem driver init
+[    0.750350] shm_ipc shmem: paddr=1933574144, t_size=96468992, ipc_off=92274688, ipc_size=4194304
+[    0.750566] mif: modem_probe: 10000.mif_pdata: +++ (open)
+[    0.750770] mif: parse_dt_mbox_pdata: failed to get ap_clk_table prop
+[    0.750838] mif: parse_dt_mbox_pdata: failed to get mif_clk_table prop
+[    0.750952] mif: parse_dt_mbox_pdata: failed to get int_clk_table prop
+[    0.751121] mif: modem_if_parse_dt_pdata: DT parse complete!
+[    0.751554] mif: ss310ap_init_modemctl_device: +++
+[    0.751679] mif: mif_init_irq: name:cp_fail num:61 flags:0x00014000
+[    0.751819] mif: mif_request_irq: cp_fail(#61) handler registered (flags:0x00014000)
+[    0.751938] mif: mif_disable_irq: cp_fail(#61) is disabled <(%pf?)>
+[    0.752039] mif: mif_init_irq: name:cp_wdt num:62 flags:0x00014000
+[    0.752170] mif: mif_request_irq: cp_wdt(#62) handler registered (flags:0x00014000)
+[    0.752240] mif: mif_disable_irq: cp_wdt(#62) is disabled <(%pf?)>
+[    0.752357] mif: ss310ap_init_modemctl_device: cp_rst_n: Invalied gpio pins
+[    0.752477] mif: init_mailbox_regs_volt_info: cp_cpu_freq_asv: 1
+[    0.752543] mif: init_mailbox_regs_volt_info: cp_volt_700:750000 cp_volt_830:818750
+[    0.752657] mif: ss310ap_init_modemctl_device: ---
+[    0.752722] mif: create_modemctl_device: ss305ap is created!!!
+[    0.752835] mif: shmem_create_link_device: +++
+[    0.752899] mif: shmem_create_link_device: MODEM:ss305ap LINK:shmem
+[    0.753041] mif: shmem_create_link_device: shmem<->ss305ap: LINK_ATTR_DPRAM_MAGIC
+[    0.753131] mif: shmem_create_link_device: boot_base=ffff800088000000, boot_size=92274688
+[    0.753251] mif: shmem_create_link_device: ipc_base=ffff800082000000, ipc_size=4194304
+[    0.753367] mif: shmem_create_link_device: Parsing MIF table...
+[    0.753432] mif: exynos_devfreq_parse_ect: ECT is not defined
+[    0.753543] mif: shmem_create_link_device: Parsing CPU table...
+[    0.753607] mif: exynos_devfreq_parse_ect: ECT is not defined
+[    0.753717] mif: shmem_create_link_device: Parsing INT table...
+[    0.753781] mif: exynos_devfreq_parse_ect: ECT is not defined
+[    0.753892] mif: shmem_create_link_device: packet log device create fail
+[    0.754004] mif: shmem_create_link_device: ---
+[    0.754066] mif: modem_probe: ss305ap: shmem link created
+[    0.754260] mif: create_io_device: umts_ipc0 created
+[    0.754482] mif: create_io_device: umts_ipc1 created
+[    0.754645] mif: create_io_device: umts_rfs0 created
+[    0.754950] mif: create_io_device: umts_csd created
+[    0.755118] mif: create_io_device: umts_router created
+[    0.755721] mif: sipc5_init_io_device: iod:umts_dm0, both registerd
+[    0.755791] mif: create_io_device: umts_dm0 created
+[    0.756220] mif: create_io_device: rmnet0 created
+[    0.756587] mif: create_io_device: rmnet1 created
+[    0.756946] mif: create_io_device: rmnet2 created
+[    0.757363] mif: create_io_device: rmnet3 created
+[    0.757720] mif: create_io_device: rmnet4 created
+[    0.758131] mif: create_io_device: rmnet5 created
+[    0.758491] mif: create_io_device: rmnet6 created
+[    0.758879] mif: create_io_device: rmnet7 created
+[    0.759142] mif: create_io_device: multipdp created
+[    0.759246] mif: create_io_device: BOOT device = umts_boot0
+[    0.759422] mif: create_io_device: umts_boot0 created
+[    0.759591] mif: create_io_device: umts_ramdump0 created
+[    0.759736] mif: modem_probe: 10000.mif_pdata: ---
+[    0.760797] s2mpu06 10510000.speedy:pmic@0: S2MPU06 PMIC id 0x2
+[    0.770893] megasas: 07.727.03.00-rc1
+[    0.774106] tun: Universal TUN/TAP device driver, 1.6
+[    0.774690] VFIO - User Level meta-driver version: 0.3
+[    0.775343] exynos-dwc3 soc@0:usb@13600000: supply vdd10 not found, using dummy regulator
+[    0.779383] usbcore: registered new interface driver usb-storage
+[    1.092233] input: MELFAS MIP4 Touchscreen as /devices/platform/soc@0/13840000.i2c/i2c-0/0-0048/input/input0
+[    1.093286] input: s2mpu06-pwrkey as /devices/platform/soc@0/10510000.speedy/10510000.speedy:pmic@0/s2mpu06-pwrkey.4.auto/input/input1
+[    1.099762] s2mpu06-rtc s2mpu06-rtc.1.auto: registered as rtc0
+[    1.101523] s2mpu06-rtc s2mpu06-rtc.1.auto: setting system clock to 2026-10-27T19:31:10 UTC (1793129470)
+[    1.101737] i2c_dev: i2c /dev entries driver
+[    1.103774] s2mpu06-charger s2mpu06-charger.2.auto: cable: input 500 mA, charge 500 mA
+[    1.104300] s2mpu06-charger s2mpu06-charger.2.auto: charger CTRL12 0xd1 (watchdog off)
+[    1.106369] sdhci: Secure Digital Host Controller Interface driver
+[    1.106491] sdhci: Copyright(c) Pierre Ossman
+[    1.106836] Synopsys Designware Multimedia Card Interface Driver
+[    1.107328] sdhci-pltfm: SDHCI platform and OF driver helper
+[    1.107340] dwmmc_exynos 13540000.mmc: IDMAC supports 64-bit address mode.
+[    1.107524] dwmmc_exynos 13540000.mmc: Using internal DMA controller.
+[    1.107594] dwmmc_exynos 13540000.mmc: Version ID is 270a
+[    1.107743] dwmmc_exynos 13540000.mmc: DW MMC controller at irq 71,64 bit host data width,64 deep fifo
+[    1.108153] mmc_host mmc0: card is non-removable.
+[    1.108337] usbcore: registered new interface driver usbhid
+[    1.108452] usbhid: USB HID core driver
+[    1.109347] exynos-adc 10550000.adc: supply vdd not found, using dummy regulator
+[    1.110535] NET: Registered PF_INET6 protocol family
+[    1.112077] Segment Routing with IPv6
+[    1.112220] In-situ OAM (IOAM) with IPv6
+[    1.112381] NET: Registered PF_PACKET protocol family
+[    1.112506] 8021q: 802.1Q VLAN Support v1.8
+[    1.112603] Key type dns_resolver registered
+[    1.118811] mmc_host mmc0: Bus speed (slot 0) = 43671875Hz (slot req 400000Hz, actual 397017HZ div = 55)
+[    1.121673] Loading compiled-in X.509 certificates
+[    1.128609] Demotion targets for Node 0: null
+[    1.135405] exynos-dsi 14800000.dsi: supply vddcore not found, using dummy regulator
+[    1.186723] [drm] Exynos DRM: using 14830000.display-controller device for DMA mapping operations
+[    1.186902] exynos-drm exynos-drm: bound 14830000.display-controller (ops 0xffff800080f00ba0)
+[    1.187588] mmc_host mmc0: Bus speed (slot 0) = 43671875Hz (slot req 52000000Hz, actual 43671875HZ div = 0)
+[    1.187738] exynos-dsi 14800000.dsi: [drm:samsung_dsim_host_attach] Attached ea8061s device (lanes:4 bpp:24 mode-flags:0x823)
+[    1.188024] exynos-drm exynos-drm: bound 14800000.dsi (ops 0xffff800080f01020)
+[    1.188125] mmc_host mmc0: Bus speed (slot 0) = 174687500Hz (slot req 200000000Hz, actual 174687500HZ div = 0)
+[    1.188804] [drm] Initialized exynos 1.1.0 for exynos-drm on minor 1
+[    1.192176] exynos-decon 14830000.display-controller: keeping the output the bootloader set up
+[    1.207272] exynos-dsi 14800000.dsi: keeping the link the bootloader set up
+[    1.236863] panel-samsung-ea8061s 14800000.dsi.0: panel id: 49 00 01
+[    1.287043] Dynamic Aid Finished !
+[    1.299030] mmc0: new HS200 MMC card at address 0001
+[    1.299680] mmcblk0: mmc0:0001 QX63MB 29.1 GiB
+[    1.301555] Alternate GPT is invalid, using primary GPT.
+[    1.301609]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15 p16 p17 p18 p19 p20 p21 p22 p23 p24 p25
+[    1.304187] mmcblk0boot0: mmc0:0001 QX63MB 4.00 MiB
+[    1.305178] mmcblk0boot1: mmc0:0001 QX63MB 4.00 MiB
+[    1.306019] mmcblk0rpmb: mmc0:0001 QX63MB 16.0 MiB, chardev (238:0)
+[    1.409782] Console: switching to colour frame buffer device 90x80
+[    1.428145] exynos-drm exynos-drm: [drm] fb0: exynosdrmfb frame buffer device
+[    1.431745] s2mpu06-fuelgauge s2mpu06-fuelgauge.3.auto: ageing step 0 for 4 cycles, float voltage 4350000 uV
+[    1.432090] clk: Not disabling unused clocks
+[    1.432209] PM: genpd: Disabling unused power domains
+[    1.433178] Freeing unused kernel memory: 1920K
+[    1.433403] Run /init as init process
+[    1.433505]   with arguments:
+[    1.433597]     /init
+[    1.433726]   with environment:
+[    1.433819]     HOME=/
+[    1.433906]     TERM=linux
+[    1.442194] init: devtmpfs mounted
+[    1.444207] init: INFORM3 set to normal boot
+[    1.452840] configfs-gadget.j4 gadget.0: HOST MAC 52:d8:64:70:20:45
+[    1.453054] configfs-gadget.j4 gadget.0: MAC 7a:50:b5:6f:88:a3
+[    1.455010] init: USB gadget (rndis0) bound to UDC 13600000.usb
+[    1.457303] init: found root device: /dev/mmcblk0p18
+[    1.484644] EXT4-fs (mmcblk0p18): mounted filesystem bf4236e5-0bde-4d8e-816f-29ff12a07d00 r/w with ordered data mode. Quota mode: none.
+[    1.485479] init: mounted /dev/mmcblk0p18 (ext4) on /mnt/root
+[    1.489037] init: switch_root /mnt/root /sbin/init
+[    1.516510] init: Console is alive
+[    1.543984] kmodloader: loading kernel modules from /etc/modules-boot.d/*
+[    1.545175] kmodloader: done loading kernel modules from /etc/modules-boot.d/*
+[    1.547387] init: - preinit -
+[    3.982721] random: crng init done
+[    8.097642] mount_root: mounting /dev/root with options 
+[    8.118899] EXT4-fs (mmcblk0p18): re-mounted bf4236e5-0bde-4d8e-816f-29ff12a07d00.
+[    8.123773] urandom-seed: Seeding with /etc/urandom.seed
+[    8.148056] procd: - early -
+[    8.711370] procd: - ubus -
+[    8.866989] procd: - init -
+[    9.075663] EXT4-fs (mmcblk0p3): mounted filesystem 57f8f4bc-abf4-655f-bf67-946fc0f9f25b ro with ordered data mode. Quota mode: none.
+[    9.253198] urngd: v1.0.2 started.
+[    9.357318] kmodloader: loading kernel modules from /etc/modules.d/*
+[    9.370119] compat: loading out-of-tree module taints kernel.
+[    9.374581] Loading modules backported from Linux version v6.18.55-0-g725bd2f3c
+[    9.378425] Backport generated by backports.git 0c0df20
+[    9.394747] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: platform_mif_create: Creating MIF platform device
+[    9.402240] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: platform_mif_create: platform->mem_start 0x79000000 platform->mem_size 0x400000
+[    9.409781] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: platform_mif_create: usbpll,owner of_property does not exist or is invalid
+[    9.417321] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: platform_mif_create: platform->reg_start 10580000 size 180 base ffff800081825000
+[    9.425060] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: platform_mif_create: MBOX irq 74 flag 0x4
+[    9.432794] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: platform_mif_create: ALIVE irq 75 flag 0x4
+[    9.440531] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: platform_mif_create: WDOG irq 76 flag 0x4
+[    9.448144] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: __platform_mif_usbpll_claim: USBPLL claim not enabled
+[    9.495761] PPP generic driver version 2.4.2
+[    9.500983] NET: Registered PF_PPPOX protocol family
+[    9.507937] wlbt: [MXMAN]: scsc_mx_module_init: mx140 Core Driver scsc_release 7.31.0.22
+[    9.515841] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: platform_mif_irq_reg_handler: Registering mif int handler mifproc_remove_ramman_proc_dir+0x1e0/0x2a0 [scsc_mx] in ffff0000026db880 ffff0000026db880
+[    9.527664] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: platform_mif_suspend_reg_handler: Registering mif suspend/resume handlers in ffff0000026db880 ffff0000026db880
+[    9.536238] wlbt: [MXMAN]: srvman_init: 
+[    9.541232] wlbt: [MXMAN]: scsc_mx_module_probe_registered_clients: No clients registered
+[    9.561117] ieee80211 phy.: wlbt: I: slsi_dev_load: Loading Maxwell Wi-Fi driver
+[    9.565438] ieee80211 phy.: wlbt: I: slsi_wlan_service_probe: WLAN service probe
+[    9.570977] wlbt: [MX_FILE]: mx140_request_file: filp_open() failed for /lib/firmware/scsc/leconf/wlan/mac.txt with -2
+[    9.580390] ieee80211 phy0: wlbt: I: slsi_get_hw_mac_address: MAC address loaded from /efs/wifi/.mac.info: 0C:A8:A7:4E:20:76
+[    9.595516] ieee80211 phy.: wlbt: I: sap_mlme_init: Registering SAP
+[    9.599955] ieee80211 phy.: wlbt: I: sap_ma_init: Registering SAP
+[    9.604297] ieee80211 phy.: wlbt: I: sap_dbg_init: Registering SAP
+[    9.608687] ieee80211 phy.: wlbt: I: sap_test_init: Registering SAP
+[    9.613047] ieee80211 phy.: wlbt: I: slsi_dev_load: --- Maxwell Wi-Fi driver loaded successfully ---
+[    9.624437] wireguard: WireGuard 1.0.0 loaded. See www.wireguard.com for information.
+[    9.628971] wireguard: Copyright (C) 2015-2019 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
+[    9.641278] kmodloader: done loading kernel modules from /etc/modules.d/*
+[   11.920911] mif: misc_open: umts_boot0 (opened 1) by samsungipcd
+[   11.926064] mif: misc_ioctl: umts_boot0: IOCTL_MODEM_RESET
+[   11.932188] mif: ss310ap_reset: +++
+[   11.938685] mif: misc_ioctl: umts_boot0: IOCTL_SECURITY_REQUEST
+[   11.943253] mif: shmem_security_request: mode=2, size=0, addr=0
+[   11.949419] mif: shmem_security_request: exynos_smc output: 0x1
+[   11.953960] mif: shmem_security_request: exynos_smc output: 0x0
+[   11.959908] mif: shmem_security_request: shmem: return_value=0
+[   12.305450] mif: misc_ioctl: umts_boot0: IOCTL_SECURITY_REQUEST
+[   12.310223] mif: shmem_security_request: mode=0, size=5912, addr=34338852
+[   12.314814] mif: shmem_security_request: exynos_smc output: 0x1
+[   12.346743] dwmmc_exynos 13540000.mmc: Unexpected interrupt latency
+[   12.350781] br-lan: port 1(rndis0) entered blocking state
+[   12.355503] br-lan: port 1(rndis0) entered disabled state
+[   12.360514] configfs-gadget.j4 gadget.0 rndis0: entered allmulticast mode
+[   12.365386] configfs-gadget.j4 gadget.0 rndis0: entered promiscuous mode
+[   12.371546] br-lan: port 1(rndis0) entered blocking state
+[   12.375889] br-lan: port 1(rndis0) entered forwarding state
+[   12.456882] mif: shmem_security_request: exynos_smc output: 0x0
+[   12.461238] mif: shmem_security_request: shmem: return_value=0
+[   12.466032] mif: misc_ioctl: umts_boot0: IOCTL_MODEM_ON
+[   12.470435] mif: ss310ap_on: +++
+[   12.474777] mif: ss310ap_on: cp_active:0 cp_status:0
+[   12.479202] mif: get_ds_detect: Dual SIM detect = 1
+[   12.483520] mif: init_mailbox_regs: sys_rev:2, ds_det:0 (0x80)
+[   12.487845] mif: ss310ap_on: CP aleady Power on, Just start!
+[   12.492134] exynos_cp_release
+[   12.496376] exynos_cp_release, cp_ctrl[0x00000000] -> [0x00000008]
+[   12.830809] mif: ss310ap_on: change_mr_reset -> 0
+[   12.835330] mif: ss310ap_on: ---
+[   12.840559] mif: misc_ioctl: umts_boot0: IOCTL_MODEM_BOOT_ON
+[   12.846003] mif: ss310ap_boot_on: +++
+[   12.851288] mif: io_dev_modem_state_changed: ss305ap->state changed (OFFLINE -> BOOTING)
+[   12.859924] mif: mif_disable_irq: cp_wdt(#62) is not active <(%pf?)>
+[   12.865447] mif: mif_enable_irq: cp_fail(#61) is enabled <pf>
+[   12.870011] mif: ss310ap_boot_on: cp_status=1
+[   12.874449] mif: ss310ap_boot_on: ---
+[   12.880894] mif: misc_ioctl: umts_boot0: IOCTL_MODEM_DL_START
+[   12.884879] mif: shmem_start_download: shmem: magic == 0x424F4F54
+[   12.888826] mif: ss310ap_modem_boot_confirm: ap_status=1
+[   12.893139] mif: misc_ioctl: umts_boot0: IOCTL_MODEM_BOOT_OFF
+[   12.897330] mif: ss310ap_boot_off: +++
+[   13.287669] ieee80211 phy0: wlbt: I: slsi_net_open: phy0-ap0 -- Recovery Status:0
+[   13.291720] /data/misc/conn/.psm.info is not exist.
+[   13.296469] /data/vendor/wifi/rftest.info is not exist.
+[   13.304029] ieee80211 phy0: wlbt: I: slsi_sm_wlan_service_open: Open WLAN service
+[   13.310655] wlbt: [MXMAN]: scsc_mx_service_open: 
+[   13.314622] wlbt: [MXMAN]: __mxman_open: Auto-recovery: off
+[   13.318777] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: platform_mif_map: Map: virt ffff8000841bd000 phys 79000000
+[   13.329549] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: platform_mif_register_irq: Registering IRQs
+[   13.339012] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: platform_mif_register_irq: Registering MBOX irq: 74 flag 0x4
+[   13.349143] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: platform_mif_register_irq: Registering WDOG irq: 76 flag 0x4
+[   13.363408] wlbt: [MX_FILE]: mx140_file_download_fw: try 0 _11
+[   13.369756] wlbt: [MX_FILE]: __mx140_file_download_fw: firmware_variant=mx140 (_11)
+[   13.377390] wlbt: [MX_FILE]: mx140_request_file: filp_open() failed for /lib/firmware/scsc/mx140_11.bin with -2
+[   13.386382] wlbt: [MX_FILE]: __mx140_file_download_fw: Error Loading FW, error -2
+[   13.390520] wlbt: [MX_FILE]: mx140_file_download_fw: try 1 _10
+[   13.395984] wlbt: [MX_FILE]: __mx140_file_download_fw: firmware_variant=mx140 (_10)
+[   13.400256] wlbt: [MX_FILE]: mx140_request_file: filp_open() failed for /lib/firmware/scsc/mx140_10.bin with -2
+[   13.410057] wlbt: [MX_FILE]: __mx140_file_download_fw: Error Loading FW, error -2
+[   13.415951] wlbt: [MX_FILE]: mx140_file_download_fw: try 2 _00
+[   13.419999] wlbt: [MX_FILE]: __mx140_file_download_fw: firmware_variant=mx140 (_00)
+[   13.424830] wlbt: [MX_FILE]: mx140_request_file: filp_open() failed for /lib/firmware/scsc/mx140_00.bin with -2
+[   13.433799] wlbt: [MX_FILE]: __mx140_file_download_fw: Error Loading FW, error -2
+[   13.437923] wlbt: [MX_FILE]: mx140_file_download_fw: try 3 
+[   13.452583] wlbt: [MX_FILE]: __mx140_file_download_fw: firmware_variant=mx140 ()
+[   13.472579] wlbt: [FW_LOAD]: fwhdr_parse_v02: hdr_length=420
+[   13.477872] wlbt: [MXMAN]: fwhdr_init: FW HEADER version: hdr_major: 1 hdr_minor: 0
+[   13.483020] wlbt: [MXMAN]: fwhdr_init: FWAPI version: fwapi_major: 0 fwapi_minor: 2
+[   13.514165] wlbt: [MXMAN]: fw_init: Firmware BUILD_ID: O|7314|2021-11-05 13:52:33 UTC|java_s610|S610_E7570_R1-6_Y21W44A
+[   13.521752] wlbt: [MIF]: miframman_init: MIFRAMMAN_BLOCK_SIZE = 64
+[   13.527021] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: platform_mif_irq_reg_handler: Registering mif int handler mifproc_remove_ramman_proc_dir+0x1e0/0x2a0 [scsc_mx] in ffff0000026db880 ffff0000026db880
+[   13.539658] wlbt: [GDB_TRANS]: gdb_transport_probe_registered_clients: No clients registered
+[   13.547849] wlbt: [GDB_TRANS]: gdb_transport_probe_registered_clients: No clients registered
+[   13.556119] wlbt: [MXLOG_TRANS]: mxlog_thread_start: Started thread mxlog_thread
+[   13.569551] wlbt: [MX_FW]: mxlog_init: Loaded 646111 bytes of log-strings from common/log-strings.bin
+[   13.578961] wlbt: [MX_FW]: mxlog_init: Log-strings is not versioned.
+[   13.584029] scsc_wlbt 10580000.wlbt: wlbt: [PLAT_MIF]: platform_mif_irq_reg_reset_request_handler: Registering mif reset_request int handler panic_record_dump_buffer+0xe0/0x110 [scsc_mx] in ffff0000026db880 ffff0000026db880
+[   13.621060] wlbt: 000036BB Registering shutdown listener.
+[   13.621172] wlbt: [MXMAN]: mxman_message_handler: Received MM_START_IND message from the firmware, arg=0x20b0
+[   13.626225] wlbt: 0000372A APM IPC Protocol NOT available.
+[   13.633948] wlbt: [MXMAN]: mxman_print_versions: RF_CHIP_VERSION: 0x20b0: S610 (0xb0), EVT2.0
+[   13.638953] wlbt: 00003751 DEBUG_ARM module is disabled.
+[   13.647136] wlbt: [MXMAN]: mxman_print_versions: WLBT FW: O|7314|2021-11-05 13:52:33 UTC|java_s610|S610_E7570_R1-6_Y21W44A
+[   13.660549] wlbt: [MXMAN]: mxman_print_versions: WLBT Driver: 7.31.0.22
+[   13.665158] wlbt: [MX_FILE]: __mx140_file_request_conf: try /lib/firmware/scsc/mx140/conf/wlan/wlan.hcf
+[   13.674421] wlbt: [MX_FILE]: mx140_request_file: filp_open() failed for /lib/firmware/scsc/mx140/conf/wlan/wlan.hcf with -2
+[   13.683691] wlbt: [MX_FILE]: __mx140_file_request_conf: try /lib/firmware/scsc/mx140/conf/java_s611/wlan/wlan.hcf
+[   13.692896] wlbt: [MX_FILE]: mx140_request_file: filp_open() failed for /lib/firmware/scsc/mx140/conf/java_s611/wlan/wlan.hcf with -2
+[   13.702264] wlbt: [MX_FILE]: __mx140_file_request_conf: try /lib/firmware/scsc/mx140_wlan.hcf
+[   13.712258] wlbt: [MX_FILE]: __mx140_file_request_conf: loaded /lib/firmware/scsc/mx140_wlan.hcf
+[   13.721908] ieee80211 phy0: wlbt: I: slsi_mib_open_file: MIB hash: 0x12bf
+[   13.726810] ieee80211 phy.: wlbt: I: slsi_mib_get_platform: No HCF version ID
+[   13.731708] wlbt: [MX_FILE]: __mx140_file_request_conf: try /lib/firmware/scsc/mx140/conf/wlan/wlan_sw.hcf
+[   13.741357] wlbt: [MX_FILE]: mx140_request_file: filp_open() failed for /lib/firmware/scsc/mx140/conf/wlan/wlan_sw.hcf with -2
+[   13.751077] wlbt: [MX_FILE]: __mx140_file_request_conf: try /lib/firmware/scsc/mx140/conf/java_s611/wlan/wlan_sw.hcf
+[   13.760899] wlbt: [MX_FILE]: mx140_request_file: filp_open() failed for /lib/firmware/scsc/mx140/conf/java_s611/wlan/wlan_sw.hcf with -2
+[   13.770733] wlbt: [MX_FILE]: __mx140_file_request_conf: try /lib/firmware/scsc/mx140_wlan_sw.hcf
+[   13.780563] wlbt: [MX_FILE]: mx140_request_file: filp_open() failed for /lib/firmware/scsc/mx140_wlan_sw.hcf with -2
+[   13.790382] ieee80211 phy0: wlbt: I: slsi_sm_wlan_service_start: Recovery -- Status:0  In_Progress:0  -- cm_if_state:2
+[   13.800110] ieee80211 phy0: wlbt: I: slsi_sm_wlan_service_start: Allocate mifram
+[   13.805151] ieee80211 phy0: wlbt: I: slsi_sm_wlan_service_start: Start HIP
+[   13.810073] ieee80211 phy.: wlbt: I: hip4_init: Loading MIB into shared memory, size (2960)
+[   13.819672] ieee80211 phy.: wlbt: I: hip4_init: Loading MIB 0 into shared memory, offset (0), size (2960), total (2960)
+[   13.829403] ieee80211 phy.: wlbt: I: hip4_init: Loading MIB 1 into shared memory, offset (2960), size (0), total (2960)
+[   13.839123] ieee80211 phy.: wlbt: I: hip4_init: Loading MIB into shared memory, size (2960)
+[   13.848880] ieee80211 phy.: wlbt: I: hip4_init: Loading MIB 0 into shared memory, offset (0), size (2960), total (2960)
+[   13.858768] ieee80211 phy.: wlbt: I: hip4_init: Loading MIB 1 into shared memory, offset (2960), size (0), total (2960)
+[   13.868822] ieee80211 phy0: wlbt: I: slsi_sm_wlan_service_start: Starting WLAN service
+[   13.873893] wlbt: [MXMAN]: scsc_mx_service_start: 
+[   13.957521] wlbt: [MXMAN]: srv_message_handler: Received SM_MSG_START_CFM message service=ffff000000b13980 with service_id=1 from the firmware
+[   13.967655] ieee80211 phy.: wlbt: I: sap_mlme_version_supported: Reported version: 14.2
+[   13.972800] ieee80211 phy.: wlbt: I: sap_ma_version_supported: Reported version: 14.0
+[   13.977921] ieee80211 phy.: wlbt: I: sap_dbg_version_supported: Reported version: 13.3
+[   13.983011] ieee80211 phy.: wlbt: I: sap_test_version_supported: Reported version: 14.0
+[   13.988050] wlbt: [MX_FILE]: __mx140_file_request_conf: try /lib/firmware/scsc/mx140/conf/wlan/localmib.hcf
+[   13.998048] wlbt: [MX_FILE]: mx140_request_file: filp_open() failed for /lib/firmware/scsc/mx140/conf/wlan/localmib.hcf with -2
+[   14.008048] wlbt: [MX_FILE]: __mx140_file_request_conf: try /lib/firmware/scsc/mx140/conf/java_s611/wlan/localmib.hcf
+[   14.018037] wlbt: [MX_FILE]: mx140_request_file: filp_open() failed for /lib/firmware/scsc/mx140/conf/java_s611/wlan/localmib.hcf with -2
+[   14.028060] wlbt: [MX_FILE]: __mx140_file_request_conf: try /lib/firmware/scsc/mx140_localmib.hcf
+[   14.038101] wlbt: [MX_FILE]: mx140_request_file: filp_open() failed for /lib/firmware/scsc/mx140_localmib.hcf with -2
+[   14.049406] ieee80211 phy0: wlbt: W: slsi_rx_debug: FAULT_IND: |cpu PHY|id 0x000E|arg 0x000001D7|count 1|timestamp     308148|
+[   14.049478] ieee80211 phy0: wlbt: I: slsi_start: === Version info from the [MIB] ===
+[   14.059410] ieee80211 phy0: wlbt: W: slsi_rx_debug: FAULT_IND: |cpu PHY|id 0x0004|arg 0x000007ED|count 1|timestamp     442208|
+[   14.064434] ieee80211 phy0: wlbt: I: slsi_start: HW Version : 0xA102 (41218)
+[   14.079778] ieee80211 phy0: wlbt: I: slsi_start: Platform : 0x001F (31)
+[   14.084867] ieee80211 phy0: wlbt: I: slsi_cfg80211_update_wiphy: BANDS SUPPORTED -> 2.4:'Y' 5:'N'
+[   14.094851] ieee80211 phy0: wlbt: I: slsi_cfg80211_update_wiphy: HT/VHT SUPPORTED -> HT:'Y' VHT:'N'
+[   14.104843] ieee80211 phy0: wlbt: I: slsi_cfg80211_update_wiphy: HT  -> cap:0x016f ampdu_density:5 ampdu_factor:3
+[   14.114921] ieee80211 phy0: wlbt: I: slsi_cfg80211_update_wiphy: VHT -> cap:0x02801121
+[   14.120976] ieee80211 phy0: wlbt: W: write_wifi_version_info_file: version file wasn't found
+[   14.131045] wlbt: [MX_FILE]: mx140_request_file: filp_open() failed for /lib/firmware/scsc/conf/wlan/mac.txt with -2
+[   14.141152] ieee80211 phy0: wlbt: I: slsi_get_hw_mac_address: MAC address loaded from /efs/wifi/.mac.info: 0C:A8:A7:4E:20:76
+[   14.153908] br-iris: port 1(phy0-ap0) entered blocking state
+[   14.159063] br-iris: port 1(phy0-ap0) entered disabled state
+[   14.164302] scsc_wlbt 10580000.wlbt phy0-ap0: entered allmulticast mode
+[   14.169449] scsc_wlbt 10580000.wlbt phy0-ap0: entered promiscuous mode
+[   14.177167] scsc_wlbt 10580000.wlbt phy0-ap0: left allmulticast mode
+[   14.182137] scsc_wlbt 10580000.wlbt phy0-ap0: left promiscuous mode
+[   14.187135] br-iris: port 1(phy0-ap0) entered disabled state
+[   14.195375] br-iris: port 1(phy0-ap0) entered blocking state
+[   14.200367] br-iris: port 1(phy0-ap0) entered disabled state
+[   14.205311] scsc_wlbt 10580000.wlbt phy0-ap0: entered allmulticast mode
+[   14.210435] scsc_wlbt 10580000.wlbt phy0-ap0: entered promiscuous mode
+[   14.532628] ieee80211 phy0: wlbt: I: slsi_net_open: phy0-sta0 -- Recovery Status:0
+[   14.540881] /data/misc/conn/.psm.info is not exist.
+[   14.546529] /data/vendor/wifi/rftest.info is not exist.
+[   14.619024] mif: cmd_phone_start_handler: shmem: CP_START <- ss305ap (ss305ap.state:BOOTING cp_boot_done:0)
+[   14.628468] mif: rild_ready: shmem: umts_ipc0.opened=0, umts_rfs0.opened=0
+[   14.633741] mif: mif_enable_irq: cp_wdt(#62) is enabled <pf>
+[   14.638501] mif: io_dev_modem_state_changed: ss305ap->state changed (BOOTING -> ONLINE)
+[   14.643231] mif: ss310ap_boot_off: ---
+[   14.647900] mif: mif_disable_irq: cp_fail(#61) is disabled <(%pf?)>
+[   14.652639] mif: misc_release: umts_boot0 (opened 0) by samsungipcd
+[   14.666930] mif: shmem_init_comm: umts_rfs0 is not opened yet
+[   14.671610] mif: misc_open: umts_ipc0 (opened 1) by samsungipcd
+[   14.676210] mif: shmem_init_comm: shmem: umts_rfs0->INIT_END->ss305ap
+[   14.680860] mif: write_clk_table_to_shmem: PARSER_VERSION: CT0
+[   14.685472] mif: write_clk_table_to_shmem: TOTAL_TABLE_COUNT: 3
+[   14.690027] mif: write_clk_table_to_shmem: TABLE_NAME[1] : CL0
+[   14.694481] mif: write_clk_table_to_shmem: TABLE_COUNT[1]: 0
+[   14.698795] mif: write_clk_table_to_shmem: TABLE_NAME[2] : MIF
+[   14.703087] mif: write_clk_table_to_shmem: TABLE_COUNT[2]: 0
+[   14.706770] ieee80211 phy0: wlbt: I: slsi_mlme_add_scan: scan started for id:0x100, n_channels:13, n_ssids:2, scan_type:1
+[   14.707242] mif: write_clk_table_to_shmem: TABLE_NAME[3] : INT
+[   14.719555] mif: cmd_phone_start_handler: shmem: CP_START <- ss305ap (ss305ap.state:ONLINE cp_boot_done:0)
+[   14.719566] mif: rild_ready: shmem: umts_ipc0.opened=1, umts_rfs0.opened=1
+[   14.719572] mif: cmd_phone_start_handler: shmem: INIT_END -> ss305ap
+[   14.736686] mif: write_clk_table_to_shmem: TABLE_COUNT[3]: 0
+[   14.740867] mif: misc_open: umts_rfs0 (opened 1) by samsungipcd
+[   15.116899] ieee80211 phy0: wlbt: I: slsi_scan_complete: Scan count:5 APs
+[   15.124612] ieee80211 phy0: wlbt: phy0-sta0: I: slsi_connect: Robotika@test Freq=2412 vifStatus=0 CurrBssid:00:00:00:00:00:00 NewBssid:c0:64:e4:48:ed:00 Qinfo:-1 ieLen:28
+[   15.185416] ieee80211 phy0: wlbt: I: slsi_rx_procedure_started_ind: Send Association Request
+[   15.193683] ieee80211 phy0: wlbt: I: slsi_rx_connect_ind: Received Association Response
+[   15.200924] ieee80211 phy0: wlbt: I: slsi_rx_received_frame_ind: Received 4way-H/S, M1
+[   15.210653] ieee80211 phy0: wlbt: I: slsi_rx_received_frame_ind: Received 4way-H/S, M3
+[   15.222853] ieee80211 phy0: wlbt: W: slsi_rx_debug: FAULT_IND: |cpu PHY|id 0xC026|arg 0x00000004|count 1|timestamp    1613648|
+[   15.224224] ieee80211 phy0: wlbt: I: slsi_mlme_add_scan: scan started for id:0x300, n_channels:1, n_ssids:1, scan_type:6
+[   15.225509] ieee80211 phy0: wlbt: I: slsi_wlan_dump_public_action_subtype: Received Radio Measurement Frame (Neighbor Report Resp)
+[   15.335480] ieee80211 phy0: wlbt: W: slsi_rx_debug: FAULT_IND: |cpu PHY|id 0xC033|arg 0x00000002|count 1|timestamp    1723007|
+[   15.335660] br-iris: port 1(phy0-ap0) entered blocking state
+[   15.347602] br-iris: port 1(phy0-ap0) entered forwarding state
+[   15.420579] mif: LNK RX: fc eb 1d 00 | 19 00 00 00 13 05 03 0f 00 0d 0a 41 53 54 5f 50 4f 57 45 52
+[   15.428561] mif: LNK RX: fc eb 0c 00 | 08 00 01 00 01 01 03 aa 00 00 00 00
+[   15.432520] mif: shmem_qos_mif_req_handler: shmem_qos_mif_req_handler
+[   15.436703] mif: LNK RX: fc eb 0d 00 | 09 00 02 00 0d 0f 03 06 00 00 00 00
+[   15.436866] mif: LNK TX: fc eb 0c 00 | 08 00 00 ff 0a 03 02 01 6b 6b 6b 6b
+[   15.440711] mif: LNK RX: fc eb 0c 00 | 08 00 03 00 0a 2d 03 00 00 00 00 00
+[   15.444665] mif: LNK TX: fc eb 0c 00 | 08 00 01 ff 08 0a 03 01 6b 6b 6b 6b
+[   15.448418] mif: LNK RX: fc eb 0f 00 | 0b 00 04 ff 26 01 01 00 00 00 00 00
+[   15.456398] mif: LNK RX: fc eb 16 00 | 12 00 05 00 05 0c 03 0a 98 26 01 60 61 52 63 39 44 f9 00 00
+[   15.463937] mif: LNK RX: fc eb 0c 00 | 08 00 06 00 05 07 03 02 00 00 00 00
+[   15.467844] mif: LNK RX: fc eb 0c 00 | 08 00 07 00 01 07 03 02 00 00 00 00
+[   15.471680] mif: shmem_qos_work_mif: pm_qos:0x0 requested
+[   15.475434] mif: shmem_qos_work_mif: Unlock MIF(req_val : 0)
+[   15.479998] mif: LNK RX: fc eb 0c 00 | 08 00 08 00 05 07 03 02 00 00 00 00
+[   15.483911] mif: LNK RX: fc eb 0d 00 | 09 00 09 00 05 01 03 00 00 00 00 00
+[   15.487629] mif: LNK RX: fc eb 0d 00 | 09 00 0a 00 05 01 03 82 00 00 00 00
+[   15.487824] mif: LNK TX: fc eb 0b 00 | 07 00 02 ff 0a 02 02 6b 6b 6b 6b 6b
+[   15.497178] mif: LNK RX: fc eb 2d 00 | 29 00 0b 00 0a 03 02 01 11 33 35 38 34 38 39 30 39 33 30 34
+[   15.504400] mif: LNK RX: fc eb 0c 00 | 08 00 0c 00 0a 49 03 02 00 00 00 00
+[   15.510583] mif: LNK RX: fc eb 0d 00 | 09 00 0d 00 05 01 03 00 00 00 00 00
+[   15.514380] mif: LNK RX: fc eb 0d 00 | 09 00 0e 00 05 01 03 82 00 00 00 00
+[   15.580342] mif: LNK RX: fc eb 1b 00 | 17 00 0f 02 0a 02 02 0f 35 31 30 31 30 31 36 32 35 33 36 39
+[   15.587910] mif: LNK RX: fc eb 12 00 | 0e 00 10 00 02 16 03 30 30 30 30 30 30 00 00 00 00 00 00 00
+[   15.595614] mif: LNK RX: fc eb 5e 00 | 5a 00 11 ff 0e 03 01 51 00 d0 4f 81 03 01 25 00 82 02 81 82
+[   15.638831] mif: shmem_qos_mif_req_handler: shmem_qos_mif_req_handler
+[   15.642693] mif: LNK RX: fc eb 10 00 | 0c 00 12 01 80 01 02 08 0a 03 00 80
+[   15.646491] mif: shmem_qos_work_mif: pm_qos:0x0 requested
+[   15.646804] mif: LNK TX: fc eb 0c 00 | 08 00 03 ff 08 0a 03 03 6b 6b 6b 6b
+[   15.650165] mif: shmem_qos_work_mif: Unlock MIF(req_val : 0)
+[   15.707146] mif: LNK RX: fc eb 12 00 | 0e 00 13 00 02 16 03 30 30 30 30 30 30 00 00 00 00 00 00 00
+[   15.741457] mif: LNK RX: fc eb 10 00 | 0c 00 14 03 80 01 02 08 0a 03 00 80
+[   15.745509] mif: LNK TX: fc eb 0c 00 | 08 00 04 ff 08 0a 03 07 6b 6b 6b 6b
+[   15.752828] mif: LNK RX: fc eb 10 00 | 0c 00 15 04 80 01 02 08 0a 03 00 80
+[   15.756760] mif: LNK TX: fc eb 0c 00 | 08 00 05 ff 08 0a 03 0f 6b 6b 6b 6b
+[   15.828935] mif: LNK RX: fc eb 12 00 | 0e 00 16 00 02 16 03 30 30 30 30 30 30 00 00 00 00 00 00 00
+[   15.836398] mif: LNK RX: fc eb 10 00 | 0c 00 17 05 80 01 02 08 0a 03 00 80
+[   15.840399] mif: LNK TX: fc eb 0c 00 | 08 00 06 ff 08 0a 03 1f 6b 6b 6b 6b
+[   15.846622] mif: LNK RX: fc eb 10 00 | 0c 00 18 06 80 01 02 08 0a 03 00 80
+[   15.850694] mif: LNK TX: fc eb 0c 00 | 08 00 07 ff 08 0a 03 3f 6b 6b 6b 6b
+[   15.851991] mif: LNK RX: fc eb 10 00 | 0c 00 19 07 80 01 02 08 0a 03 00 80
+[   15.858543] mif: LNK TX: fc eb 0c 00 | 08 00 08 ff 08 0a 03 7f 6b 6b 6b 6b
+[   15.868270] mif: LNK RX: fc eb 10 00 | 0c 00 1a 08 80 01 02 08 0a 03 01 80
+[   15.872246] mif: LNK TX: fc eb 0c 00 | 08 00 09 ff 08 0a 03 bf 6b 6b 6b 6b
+[   15.873561] mif: LNK RX: fc eb 10 00 | 0c 00 1b 09 80 01 02 08 0a 03 01 80
+[   16.354927] ieee80211 phy0: wlbt: I: slsi_tx_data: Send DHCP [DISCOVER]
+[   16.370934] ieee80211 phy0: wlbt: I: slsi_rx_received_frame_ind: Received DHCP [OFFER]
+[   16.414985] ieee80211 phy0: wlbt: I: slsi_tx_data: Send DHCP [REQUEST]
+[   16.451923] ieee80211 phy0: wlbt: I: slsi_rx_received_frame_ind: Received DHCP [ACK]
+[   17.634980] mif: LNK RX: fc eb 20 00 | 1c 00 1c 00 08 05 03 03 02 02 02 89 3e 9e 2b 00 00 00 fe ff
+[   17.642427] mif: LNK RX: fc eb 20 00 | 1c 00 1d 00 08 05 03 03 03 01 02 89 3e 9e 2b 00 00 00 fe ff
+[   17.649757] mif: LNK RX: fc eb 25 00 | 21 00 1e 00 08 03 03 02 02 03 35 31 30 31 30 23 89 3e 02 9e
+[   19.426610] s2mpu06-charger s2mpu06-charger.2.auto: cable: input 500 mA, charge 500 mA
+[   19.818101] mif: LNK RX: fc eb 17 00 | 13 00 1f 00 07 06 03 3c 1a 00 63 00 ff ff ff ff ff 00 ff 00
+[   19.825716] mif: LNK RX: fc eb 15 00 | 11 00 20 00 07 01 03 01 04 00 00 00 00 ff ff ff ff 00 00 00
+[   20.156890] mif: LNK TX: fc eb 0b 00 | 07 00 0a ff 01 01 01 6b 6b 6b 6b 6b
+[   20.160885] mif: LNK TX: fc eb 0d 00 | 09 00 0b ff 01 07 01 02 02 6b 6b 6b
+[   20.162014] mif: LNK RX: fc eb 10 00 | 0c 00 21 0a 80 01 02 01 01 01 01 80
+[   20.168304] mif: LNK RX: fc eb 10 00 | 0c 00 22 0b 80 01 02 01 07 01 05 80
+[   20.233645] mif: LNK RX: fc eb 99 00 | 95 00 23 00 08 0c 03 00 02 00 00 00 00 00 00 00 00 00 00 00
+[   20.240762] mif: LNK RX: fc eb 1d 00 | 19 00 24 00 0a 05 03 02 01 1a 0a 1b 13 1f 1d 1c 00 02 00 35
+[   20.816472] mif: LNK RX: fc eb 17 00 | 13 00 25 00 07 06 03 3e 19 07 63 00 ff ff ff ff ff 00 ff 00
+[   21.816529] mif: LNK RX: fc eb 17 00 | 13 00 26 00 07 06 03 3c 1a 63 63 00 ff ff ff ff ff 00 ff 00
+[   24.111893] mif: LNK RX: fc eb 20 00 | 1c 00 27 00 08 05 03 03 02 02 02 89 3e 7d 50 00 00 00 fe ff
+[   24.119275] mif: LNK RX: fc eb 20 00 | 1c 00 28 00 08 05 03 03 03 01 02 89 3e 7d 50 00 00 00 fe ff
+[   24.126790] mif: LNK RX: fc eb 25 00 | 21 00 29 00 08 03 03 02 02 03 35 31 30 31 30 23 89 3e 02 7d
+[   24.134354] mif: LNK RX: fc eb 20 00 | 1c 00 2a 00 08 05 03 03 02 02 01 89 3e 7d 50 00 00 00 fe ff
+[   24.142046] mif: LNK RX: fc eb 20 00 | 1c 00 2b 00 08 05 03 03 03 01 01 89 3e 7d 50 00 00 00 fe ff
+[   24.149872] mif: LNK RX: fc eb 25 00 | 21 00 2c 00 08 03 03 02 02 03 35 31 30 31 30 23 89 3e 01 7d
+[   24.737505] mif: LNK RX: fc eb 39 00 | 35 00 2d 00 0b 0d 03 0e 2b 00 7b 22 4a 56 45 52 22 3a 22 53
+[   24.745702] mif: LNK RX: fc eb c1 00 | bd 00 2e 00 0b 0d 03 0f b3 00 7b 22 4a 56 45 52 22 3a 22 53
+[   25.195994] mif: LNK RX: fc eb 17 00 | 13 00 2f 00 07 06 03 37 1d 63 63 00 ff ff ff ff ff 00 ff 00
+[   25.702358] ieee80211 phy0: wlbt: I: slsi_rx_procedure_started_ind: Send Association Request
+[   25.711045] ieee80211 phy0: wlbt: I: slsi_rx_connected_ind: Received Association Response
+[   25.755454] ieee80211 phy0: wlbt: I: slsi_rx_received_frame_ind: Received 4way-H/S, M2
+[   25.780016] ieee80211 phy0: wlbt: I: slsi_rx_received_frame_ind: Received 4way-H/S, M4
+[   25.934155] ieee80211 phy0: wlbt: I: slsi_tx_data: Send DHCP [REQUEST]
+[   25.938647] ieee80211 phy0: wlbt: I: slsi_tx_data: Send DHCP [REQUEST]
+[   25.943994] ieee80211 phy0: wlbt: I: slsi_tx_data: Send DHCP [ACK]
+[   30.970662] mif: LNK RX: fc eb 0d 00 | 09 00 30 00 05 01 03 83 00 00 00 00
+[   30.974908] mif: LNK RX: fc eb 0c 00 | 08 00 31 00 04 07 03 02 00 00 00 00
+[   30.979117] mif: LNK RX: fc eb 0d 00 | 09 00 32 00 04 0c 03 02 01 00 00 00
+[   30.979277] mif: LNK TX: fc eb 0c 00 | 08 00 0c ff 08 08 03 01 6b 6b 6b 6b
+[   30.983161] mif: LNK RX: fc eb 29 00 | 25 00 33 00 06 05 03 01 04 01 c8 00 0e 00 09 00 02 c8 00 28
+[   30.987213] mif: LNK TX: fc eb 0b 00 | 07 00 0d ff 04 0a 02 6b 6b 6b 6b 6b
+[   30.994962] mif: LNK RX: fc eb 17 00 | 13 00 34 0d 04 0a 02 06 91 26 18 01 00 00 00 00 00 00 00 00
+[   31.007288] mif: LNK RX: fc eb 10 00 | 0c 00 35 0c 80 01 02 08 08 03 00 80
+[   31.710767] regulator: Not disabling unused regulators
+[   32.196720] mif: LNK RX: fc eb 17 00 | 13 00 36 00 07 06 03 39 1c 63 63 00 ff ff ff ff ff 00 ff 00
+[   32.801246] mif: LNK RX: fc eb 20 00 | 1c 00 37 00 08 05 03 03 02 02 01 89 3e 9e 2b 00 00 00 fe ff
+[   32.809649] mif: LNK RX: fc eb 20 00 | 1c 00 38 00 08 05 03 03 03 01 01 89 3e 9e 2b 00 00 00 fe ff
+[   32.818179] mif: LNK RX: fc eb 25 00 | 21 00 39 00 08 03 03 02 02 03 35 31 30 31 30 23 89 3e 01 9e
+[   32.826844] mif: LNK RX: fc eb 20 00 | 1c 00 3a 00 08 05 03 03 02 02 02 89 3e 9e 2b 00 00 00 fe ff
+[   32.835633] mif: LNK RX: fc eb 20 00 | 1c 00 3b 00 08 05 03 03 03 01 02 89 3e 9e 2b 00 00 00 fe ff
+[   32.844452] mif: LNK RX: fc eb 25 00 | 21 00 3c 00 08 03 03 02 02 03 35 31 30 31 30 23 89 3e 02 9e
+[   33.575308] mif: shmem_qos_mif_req_handler: shmem_qos_mif_req_handler
+[   33.580069] mif: shmem_qos_work_mif: pm_qos:0x4 requested
+[   33.584522] mif: shmem_qos_work_mif: Unlock MIF(req_val : 4)
+[   33.792403] mif: LNK RX: fc eb 17 00 | 13 00 3d 00 07 06 03 45 16 63 63 00 ff ff ff ff ff 00 ff 00
+[   33.834061] mif: LNK RX: fc eb 20 00 | 1c 00 3e 00 08 05 03 03 03 02 02 89 3e 9e 2b 00 00 00 fe ff
+[   34.792695] mif: LNK RX: fc eb 17 00 | 13 00 3f 00 07 06 03 3b 1b 63 63 00 ff ff ff ff ff 00 ff 00
+[   35.794069] mif: LNK RX: fc eb 17 00 | 13 00 40 00 07 06 03 39 1c 63 63 00 ff ff ff ff ff 00 ff 00
+[   38.148736] mif: LNK TX: fc eb cd 00 | c9 00 0e ff 0d 14 03 01 01 02 69 6e 74 65 72 6e 65 74 00 00
+[   38.157784] mif: LNK TX: fc eb 8a 00 | 86 00 0f ff 0d 01 03 01 01 06 69 6e 74 65 72 6e 65 74 00 00
+[   38.158968] mif: LNK RX: fc eb 10 00 | 0c 00 41 0e 80 01 02 0d 14 03 00 80
+[   38.171454] mif: LNK RX: fc eb 10 00 | 0c 00 42 0f 80 01 02 0d 01 03 00 80
+[   38.176199] mif: LNK TX: fc eb 72 00 | 6e 00 10 ff 0d 04 03 01 01 00 00 13 00 00 00 00 00 00 00 00
+[   38.186419] mif: LNK RX: fc eb 10 00 | 0c 00 43 10 80 01 02 0d 04 03 00 80
+[   38.596986] mif: shmem_qos_mif_req_handler: shmem_qos_mif_req_handler
+[   38.601714] mif: shmem_qos_work_mif: pm_qos:0x4 requested
+[   38.606153] mif: shmem_qos_work_mif: Unlock MIF(req_val : 4)
+[   43.078722] mif: LNK RX: fc eb 20 00 | 1c 00 44 00 08 05 03 03 02 02 02 89 3e 7d 50 00 00 00 fe ff
+[   43.087465] mif: LNK RX: fc eb 20 00 | 1c 00 45 00 08 05 03 03 03 02 02 89 3e 7d 50 00 00 00 fe ff
+[   43.096239] mif: LNK RX: fc eb 25 00 | 21 00 46 00 08 03 03 02 02 03 35 31 30 31 30 23 89 3e 02 7d
+[   43.803334] mif: shmem_qos_mif_req_handler: shmem_qos_mif_req_handler
+[   43.807832] mif: LNK RX: fc eb 20 00 | 1c 00 47 00 08 05 03 03 02 02 01 89 3e 7d 50 00 00 00 fe ff
+[   43.816469] mif: LNK RX: fc eb 20 00 | 1c 00 48 00 08 05 03 03 03 02 01 89 3e 7d 50 00 00 00 fe ff
+[   43.825189] mif: LNK RX: fc eb 25 00 | 21 00 49 00 08 03 03 02 02 03 35 31 30 31 30 23 89 3e 01 7d
+[   43.833910] mif: shmem_qos_work_mif: pm_qos:0x4 requested
+[   43.838306] mif: shmem_qos_work_mif: Unlock MIF(req_val : 4)
+[   45.233497] mif: LNK RX: fc eb 17 00 | 13 00 4a 00 07 06 03 35 1e 63 63 00 ff ff ff ff ff 00 ff 00
+[   50.040119] mif: shmem_qos_mif_req_handler: shmem_qos_mif_req_handler
+[   50.044502] mif: LNK RX: fc eb 44 01 | 40 01 4b 00 0d 09 03 01 43 01 0a 52 25 f0 c0 a8 8d 1d 00 00
+[   50.053015] mif: LNK RX: fc eb 14 00 | 10 00 4c 00 0d 10 03 01 01 00 00 00 00 00 00 00 00 00 00 00
+[   50.054169] mif: vnet_open: rmnet0 (opened 1) by samsungipcd
+[   50.061398] mif: LNK RX: fc eb 0c 00 | 08 00 4d 00 11 60 03 00 00 00 00 00
+[   50.061417] mif: LNK RX: fc eb 90 00 | 8c 00 4e 00 0b 0d 03 06 82 00 7b 22 4a 56 45 52 22 3a 22 53
+[   50.079059] mif: shmem_qos_work_mif: pm_qos:0x4 requested
+[   50.083539] mif: shmem_qos_work_mif: Unlock MIF(req_val : 4)
+[   50.296948] mif: vnet_stop: rmnet0 (opened 0) by netifd
+[   50.304318] mif: vnet_open: rmnet0 (opened 1) by netifd
+[   52.042852] mif: LNK RX: fc eb 20 00 | 1c 00 4f 00 08 05 03 21 01 02 00 00 00 15 64 5e 0b 00 b7 17
+[   52.051913] mif: LNK RX: fc eb 25 00 | 21 00 50 00 08 03 03 05 02 21 35 31 30 31 30 23 00 00 00 15
+[   52.061969] mif: LNK RX: fc eb b7 00 | b3 00 51 00 0b 0d 03 09 a9 00 7b 22 4a 56 45 52 22 3a 22 53
+[   52.562777] mif: LNK RX: fc eb 13 00 | 0f 00 52 00 0d 19 03 00 14 00 00 00 ff ff ff 00 00 00 00 00
+[   52.572079] mif: LNK RX: fc eb 17 00 | 13 00 53 00 07 06 03 4d 63 63 22 4d 07 22 01 09 ff 09 ff 00
+[   64.809986] mif: LNK RX: fc eb 17 00 | 13 00 54 00 07 06 03 4b 63 63 24 4b 07 22 01 02 ff 01 ff 00
+[   66.223912] mif: LNK RX: fc eb 17 00 | 13 00 55 00 07 06 03 4d 63 63 22 4d 09 e6 00 02 ff 05 ff 00
+[   67.370222] mif: LNK RX: fc eb 17 00 | 13 00 56 00 07 06 03 4b 63 63 24 4b 07 22 01 02 ff 03 ff 00
+[   68.784051] mif: LNK RX: fc eb 17 00 | 13 00 57 00 07 06 03 4d 63 63 22 4d 0a fa 00 02 ff 04 ff 00
+[   69.930069] mif: LNK RX: fc eb 17 00 | 13 00 58 00 07 06 03 4b 63 63 24 4b 07 2c 01 02 ff 05 ff 00
+[   71.344012] mif: LNK RX: fc eb 17 00 | 13 00 59 00 07 06 03 4d 63 63 22 4d 09 f0 00 02 ff 05 ff 00
+[   72.490092] mif: LNK RX: fc eb 17 00 | 13 00 5a 00 07 06 03 4b 63 63 24 4b 07 22 01 02 ff 04 ff 00
+[   73.904024] mif: LNK RX: fc eb 17 00 | 13 00 5b 00 07 06 03 4d 63 63 22 4d 0a fa 00 02 ff 05 ff 00
+[   75.050288] mif: LNK RX: fc eb 17 00 | 13 00 5c 00 07 06 03 4b 63 63 24 4b 06 22 01 02 ff 05 ff 00
+[   76.464175] mif: LNK RX: fc eb 17 00 | 13 00 5d 00 07 06 03 4d 63 63 22 4d 09 dc 00 02 ff 05 ff 00
+[   77.450215] mif: LNK RX: fc eb 17 00 | 13 00 5e 00 07 06 03 4b 63 63 24 4b 07 2c 01 02 ff 05 ff 00
+[   79.024088] mif: LNK RX: fc eb 17 00 | 13 00 5f 00 07 06 03 4d 63 63 22 4d 09 fa 00 02 ff 03 ff 00
+[   80.170410] mif: LNK RX: fc eb 17 00 | 13 00 60 00 07 06 03 4b 63 63 24 4b 07 22 01 02 ff 05 ff 00
+[   81.584147] mif: LNK RX: fc eb 17 00 | 13 00 61 00 07 06 03 4d 63 63 22 4d 09 fa 00 02 ff 05 ff 00
+[   82.730167] mif: LNK RX: fc eb 17 00 | 13 00 62 00 07 06 03 4b 63 63 24 4b 08 2c 01 02 ff 05 ff 00
+[   84.144001] mif: LNK RX: fc eb 17 00 | 13 00 63 00 07 06 03 4d 63 63 22 4d 09 fa 00 02 ff 05 ff 00
+[   85.290040] mif: LNK RX: fc eb 17 00 | 13 00 64 00 07 06 03 4b 63 63 24 4b 06 2c 01 02 ff 05 ff 00
+[   86.704082] mif: LNK RX: fc eb 17 00 | 13 00 65 00 07 06 03 4d 63 63 22 4d 09 fa 00 02 ff 04 ff 00
+[   99.506803] mif: LNK RX: fc eb 20 00 | 1c 00 66 00 08 05 03 21 01 02 00 00 00 1f b4 8a 03 00 b7 17
+[   99.516675] mif: LNK RX: fc eb 25 00 | 21 00 67 00 08 03 03 05 02 21 35 31 30 31 30 23 00 00 00 1f
+[   99.526261] mif: LNK RX: fc eb 17 00 | 13 00 68 00 07 06 03 51 63 63 1e 51 09 dc 00 02 ff 04 ff 00
+[  103.210228] mif: LNK RX: fc eb 20 00 | 1c 00 69 00 08 05 03 21 01 02 00 00 00 15 64 5e 0b 00 b7 17
+[  103.220025] mif: LNK RX: fc eb 25 00 | 21 00 6a 00 08 03 03 05 02 21 35 31 30 31 30 23 00 00 00 15
+[  103.229704] mif: LNK RX: fc eb 17 00 | 13 00 6b 00 07 06 03 4d 63 63 22 4d 08 04 01 02 ff ff ff 00
+[  118.490164] mif: LNK RX: fc eb 20 00 | 1c 00 6c 00 08 05 03 21 01 02 00 00 00 1f b4 8a 03 00 b7 17
+[  118.500089] mif: LNK RX: fc eb 25 00 | 21 00 6d 00 08 03 03 05 02 21 35 31 30 31 30 23 00 00 00 1f
+[  118.509917] mif: LNK RX: fc eb 17 00 | 13 00 6e 00 07 06 03 51 63 63 1e 51 09 f0 00 02 ff 02 ff 00
+[  121.150202] mif: LNK RX: fc eb 20 00 | 1c 00 6f 00 08 05 03 21 01 02 00 00 00 15 64 5e 0b 00 b7 17
+[  121.160129] mif: LNK RX: fc eb 25 00 | 21 00 70 00 08 03 03 05 02 21 35 31 30 31 30 23 00 00 00 15
+[  121.169943] mif: LNK RX: fc eb 17 00 | 13 00 71 00 07 06 03 4c 63 63 23 4c 08 0e 01 02 ff fc ff 00
+[  140.408942] ieee80211 phy0: wlbt: W: slsi_rx_debug: FAULT_IND: |cpu PHY|id 0x0009|arg 0x00000008|count 1|timestamp  118415757|
+[  140.464260] mif: LNK RX: fc eb 17 00 | 13 00 72 00 07 06 03 4e 63 63 21 4e 0a 0e 01 02 ff 04 ff 00
+[  141.610058] mif: LNK RX: fc eb 17 00 | 13 00 73 00 07 06 03 4c 63 63 23 4c 08 18 01 02 ff 07 ff 00
+[  165.805342] wlbt: [MXMAN]: mx140_log_dump: Invoking mx_logger_dump.sh UHM
+[  165.810549] _mx_exec: Launch /system/bin/mx_logger_dump.sh
+[  165.815776] _mx_exec_cleanup: 0xffff0000013f46c8
+[  165.820871] _mx_exec: call_usermodehelper() failed with -2, Executable not found /system/bin/mx_logger_dump.sh'
+[  165.830924] wlbt: [MXMAN]: mx140_log_dump: mx_logger_dump.sh err:-2
+[  165.835983] ieee80211 phy0: wlbt: I: slsi_rx_disconnected_ind: Received DEAUTH, reason = 3
+[  165.846449] ieee80211 phy0: wlbt: W: slsi_fill_last_disconnected_sta_info: Type mismatched, expected type: 2 and received type 1 
+[  165.856520] ieee80211 phy0: wlbt: W: slsi_fill_last_disconnected_sta_info: Type mismatched, expected type: 2 and received type 1 
+[  185.263824] mif: LNK RX: fc eb 17 00 | 13 00 74 00 07 06 03 4f 63 63 20 4f 0a d2 00 02 ff 03 ff 00
+[  186.409854] mif: LNK RX: fc eb 17 00 | 13 00 75 00 07 06 03 4b 63 63 24 4b 07 22 01 02 ff 01 ff 00
+[  187.823724] mif: LNK RX: fc eb 17 00 | 13 00 76 00 07 06 03 4d 63 63 22 4d 09 f0 00 02 ff 04 ff 00
+[  189.090072] mif: LNK RX: fc eb 17 00 | 13 00 77 00 07 06 03 4b 63 63 24 4b 07 2c 01 02 ff 04 ff 00
+[  193.446607] mif: LNK RX: fc eb 17 00 | 13 00 78 00 07 06 03 4d 63 63 22 4d 07 18 01 09 ff 09 ff 00
+[  196.446587] mif: LNK RX: fc eb 17 00 | 13 00 79 00 07 06 03 50 63 63 1f 50 07 18 01 08 ff 09 ff 52
+[  197.446585] mif: LNK RX: fc eb 17 00 | 13 00 7a 00 07 06 03 4d 63 63 22 4d 08 18 01 08 ff 08 ff 00
+[  200.530711] mif: LNK RX: fc eb 17 00 | 13 00 7b 00 07 06 03 4b 63 63 24 4b 06 22 01 02 ff 08 ff 00
+[  201.903776] mif: LNK RX: fc eb 17 00 | 13 00 7c 00 07 06 03 4d 63 63 22 4d 09 dc 00 02 ff 06 ff 00
+[  202.830012] mif: LNK RX: fc eb 17 00 | 13 00 7d 00 07 06 03 4b 63 63 24 4b 07 04 01 02 ff 06 ff 00
+[  208.304077] mif: LNK RX: fc eb 17 00 | 13 00 7e 00 07 06 03 4d 63 63 22 4d 0a fa 00 02 ff 03 ff 00
+[  209.450167] mif: LNK RX: fc eb 17 00 | 13 00 7f 00 07 06 03 4b 63 63 24 4b 08 0e 01 02 ff 05 ff 00
+[  210.863913] mif: LNK RX: fc eb 17 00 | 13 00 80 00 07 06 03 4d 63 63 22 4d 09 fa 00 02 ff 05 ff 00
+[  212.010170] mif: LNK RX: fc eb 17 00 | 13 00 81 00 07 06 03 4b 63 63 24 4b 08 22 01 02 ff 05 ff 38
+[  213.423854] mif: LNK RX: fc eb 17 00 | 13 00 82 00 07 06 03 4d 63 63 22 4d 0a fa 00 02 ff 05 ff 00
+[  219.510113] mif: LNK RX: fc eb 20 00 | 1c 00 83 00 08 05 03 21 01 02 00 00 00 1f b4 8a 03 00 b7 17
+[  219.520639] mif: LNK RX: fc eb 25 00 | 21 00 84 00 08 03 03 05 02 21 35 31 30 31 30 23 00 00 00 1f
+[  219.530840] mif: LNK RX: fc eb 17 00 | 13 00 85 00 07 06 03 4f 63 63 20 4f 08 fa 00 02 ff 03 ff 00
+[  224.810038] mif: LNK RX: fc eb 20 00 | 1c 00 86 00 08 05 03 21 01 02 00 00 00 15 64 5e 0b 00 b7 17
+[  224.820362] mif: LNK RX: fc eb 25 00 | 21 00 87 00 08 03 03 05 02 21 35 31 30 31 30 23 00 00 00 15
+[  224.830553] mif: LNK RX: fc eb 17 00 | 13 00 88 00 07 06 03 4c 63 63 23 4c 08 0e 01 02 ff 02 ff 0e
+[  227.370063] mif: LNK RX: fc eb 20 00 | 1c 00 89 00 08 05 03 21 01 02 00 00 00 1f b4 8a 03 00 b7 17
+[  227.380489] mif: LNK RX: fc eb 25 00 | 21 00 8a 00 08 03 03 05 02 21 35 31 30 31 30 23 00 00 00 1f
+[  227.390653] mif: LNK RX: fc eb 17 00 | 13 00 8b 00 07 06 03 4f 63 63 20 4f 08 fa 00 02 ff 02 ff 00
+[  229.930443] mif: LNK RX: fc eb 20 00 | 1c 00 8c 00 08 05 03 21 01 02 00 00 00 15 64 5e 0b 00 b7 17
+[  229.940698] mif: LNK RX: fc eb 25 00 | 21 00 8d 00 08 03 03 05 02 21 35 31 30 31 30 23 00 00 00 15
+[  229.950836] mif: LNK RX: fc eb 17 00 | 13 00 8e 00 07 06 03 4b 63 63 24 4b 07 fa 00 02 ff 01 ff 80
+[  231.343906] mif: LNK RX: fc eb 17 00 | 13 00 8f 00 07 06 03 4d 63 63 22 4d 0a f0 00 02 ff 06 ff ff
+[  235.050131] mif: LNK RX: fc eb 17 00 | 13 00 90 00 07 06 03 4b 63 63 24 4b 08 22 01 02 ff 04 ff 89
+[  236.463983] mif: LNK RX: fc eb 17 00 | 13 00 91 00 07 06 03 4d 63 63 22 4d 09 e6 00 02 ff 04 ff 00
+[  240.169869] mif: LNK RX: fc eb 20 00 | 1c 00 92 00 08 05 03 21 01 02 00 00 00 1f b4 8a 03 00 b7 17
+[  240.180217] mif: LNK RX: fc eb 25 00 | 21 00 93 00 08 03 03 05 02 21 35 31 30 31 30 23 00 00 00 1f
+[  240.190331] mif: LNK RX: fc eb 17 00 | 13 00 94 00 07 06 03 50 63 63 1f 50 09 04 01 02 ff 04 ff 80
+[  245.290209] mif: LNK RX: fc eb 20 00 | 1c 00 95 00 08 05 03 21 01 02 00 00 00 15 64 5e 0b 00 b7 17
+[  245.300558] mif: LNK RX: fc eb 25 00 | 21 00 96 00 08 03 03 05 02 21 35 31 30 31 30 23 00 00 00 15
+[  245.310822] mif: LNK RX: fc eb 17 00 | 13 00 97 00 07 06 03 4b 63 63 24 4b 07 18 01 02 ff 01 ff 00
+[  246.704054] mif: LNK RX: fc eb 17 00 | 13 00 98 00 07 06 03 4d 63 63 22 4d 0a e6 00 02 ff 05 ff 00
+[  247.849856] mif: LNK RX: fc eb 20 00 | 1c 00 99 00 08 05 03 21 01 02 00 00 00 1f b4 8a 03 00 b7 17
+[  247.860621] mif: LNK RX: fc eb 25 00 | 21 00 9a 00 08 03 03 05 02 21 35 31 30 31 30 23 00 00 00 1f
+[  247.870844] mif: LNK RX: fc eb 17 00 | 13 00 9b 00 07 06 03 50 63 63 1f 50 08 0e 01 02 ff 03 ff 00
+[  250.410539] mif: LNK RX: fc eb 20 00 | 1c 00 9c 00 08 05 03 21 01 02 00 00 00 15 64 5e 0b 00 b7 17
+[  250.420901] mif: LNK RX: fc eb 25 00 | 21 00 9d 00 08 03 03 05 02 21 35 31 30 31 30 23 00 00 00 15
+[  250.431100] mif: LNK RX: fc eb 17 00 | 13 00 9e 00 07 06 03 4b 63 63 24 4b 08 18 01 02 ff 00 ff ff
+[  251.247179] [Poison overwritten] 0xffff00003e7c1400-0xffff00003e7c143f @offset=5120. First byte 0x0 instead of 0x6b
+[  251.257408] =============================================================================
+[  251.267539] BUG skbuff_head_cache (Tainted: G           O      ): Object corrupt
+[  251.272693] -----------------------------------------------------------------------------
+[  251.272693] 
+[  251.287681] Slab 0xfffffdffc0f9f000 objects=21 used=14 fp=0xffff00003e7c1540 flags=0x3fffe0000000240(workingset|head|node=0|zone=0|lastcpupid=0x1ffff)
+[  251.297803] Object 0xffff00003e7c13c0 @offset=5056 fp=0xffff00003e7c1540
+[  251.297803] 
+[  251.307759] Redzone  ffff00003e7c1380: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb  ................
+[  251.317732] Redzone  ffff00003e7c1390: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb  ................
+[  251.327708] Redzone  ffff00003e7c13a0: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb  ................
+[  251.337688] Redzone  ffff00003e7c13b0: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb  ................
+[  251.347673] Object   ffff00003e7c13c0: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
+[  251.357659] Object   ffff00003e7c13d0: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
+[  251.367600] Object   ffff00003e7c13e0: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
+[  251.377590] Object   ffff00003e7c13f0: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
+[  251.387582] Object   ffff00003e7c1400: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[  251.397575] Object   ffff00003e7c1410: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[  251.407568] Object   ffff00003e7c1420: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[  251.417564] Object   ffff00003e7c1430: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[  251.427519] Object   ffff00003e7c1440: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
+[  251.437516] Object   ffff00003e7c1450: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
+[  251.447514] Object   ffff00003e7c1460: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
+[  251.457512] Object   ffff00003e7c1470: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
+[  251.467512] Object   ffff00003e7c1480: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
+[  251.477513] Object   ffff00003e7c1490: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b a5  kkkkkkkkkkkkkkk.
+[  251.487517] Redzone  ffff00003e7c14a0: bb bb bb bb bb bb bb bb                          ........
+[  251.497417] Padding  ffff00003e7c14f0: 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a  ZZZZZZZZZZZZZZZZ
+[  251.507357] Disabling lock debugging due to kernel taint
+[  251.512388] ------------[ cut here ]------------
+[  251.517320] WARNING: CPU: 0 PID: 109 at mm/slub.c:1127 object_err+0x1f8/0x210
+[  251.522325] Modules linked in: pppoe ppp_async nft_fib_inet nf_flow_table_inet wireguard scsc_wlan(O) scsc_mx(O) pppox ppp_generic nft_reject_ipv6 nft_reject_ipv4 nft_reject_inet nft_reject nft_redir nft_quota nft_numgen nft_nat nft_masq nft_log nft_limit nft_hash nft_flow_offload nft_fib_ipv6 nft_fib_ipv4 nft_fib nft_ct nft_chain_nat nf_tables nf_nat nf_flow_table nf_conntrack libchacha20poly1305 chacha_neon cfg80211(O) slhc scsc_platform_mif(O) poly1305_neon nfnetlink nf_reject_ipv6 nf_reject_ipv4 nf_log_syslog nf_defrag_ipv6 nf_defrag_ipv4 libcurve25519_generic libchacha crc_ccitt compat(O) ip6_udp_tunnel udp_tunnel
+[  251.557150] CPU: 0 UID: 0 PID: 109 Comm: irq/66-dwc3 Tainted: G    B      O       6.12.112 #0
+[  251.567000] Tainted: [B]=BAD_PAGE, [O]=OOT_MODULE
+[  251.571981] Hardware name: Samsung Galaxy J4 (DT)
+[  251.576880] pstate: 400000c5 (nZcv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  251.581837] pc : object_err+0x1f8/0x210
+[  251.586704] lr : object_err+0x1f8/0x210
+[  251.591511] sp : ffff8000827fb920
+[  251.596318] x29: ffff8000827fb920 x28: 0000000000000000 x27: 0000000000000001
+[  251.601105] x26: ffff00003e7c13c0 x25: fffffdffc0f9f000 x24: ffff80008116bb08
+[  251.605907] x23: ffff000000051a00 x22: ffff800081145ba8 x21: ffff00003e7c0000
+[  251.610682] x20: ffff00003e7c13c0 x19: ffff000000051a00 x18: ffff8000827fb51f
+[  251.615368] x17: 3520613520613520 x16: 6135206135206135 x15: ffff8000827fb350
+[  251.620071] x14: 0000000000000000 x13: 0099000f00d600b9 x12: ffff8000815140f8
+[  251.624742] x11: 0000000000000338 x10: ffff8000815140f8 x9 : 0000000000000058
+[  251.629334] x8 : 0000000000000018 x7 : ffff8000815140f8 x6 : 0000000000000339
+[  251.633910] x5 : ffff00007bba3248 x4 : 0000000000000000 x3 : 0000000000001020
+[  251.638427] x2 : 0000000000001020 x1 : ffff800081652558 x0 : 0000000000000000
+[  251.642953] Call trace:
+[  251.647365]  object_err+0x1f8/0x210
+[  251.651846]  check_bytes_and_report+0x108/0x140
+[  251.656260]  check_object+0x2c0/0x37c
+[  251.660622]  alloc_debug_processing+0xb0/0x1bc
+[  251.665010]  get_partial_node.part.0+0x12c/0x2a0
+[  251.669336]  ___slab_alloc+0x254/0x8a0
+[  251.673627]  __slab_alloc.isra.0+0x34/0x68
+[  251.677925]  kmem_cache_alloc_noprof+0x19c/0x1f0
+[  251.682148]  __netdev_alloc_skb+0xf0/0x1c8
+[  251.686380]  rx_submit+0x90/0x198
+[  251.690521]  rx_complete+0x90/0x24c
+[  251.694614]  usb_gadget_giveback_request+0x14/0x20
+[  251.698736]  dwc3_gadget_giveback+0xb4/0xf0
+[  251.702768]  dwc3_gadget_endpoint_trbs_complete+0x140/0x3a0
+[  251.706780]  dwc3_thread_interrupt+0x3b0/0xb7c
+[  251.710799]  irq_thread_fn+0x2c/0xa8
+[  251.714732]  irq_thread+0x164/0x2d4
+[  251.718611]  kthread+0x110/0x120
+[  251.722489]  ret_from_fork+0x10/0x20
+[  251.726280] ---[ end trace 0000000000000000 ]---
+[  251.730040] FIX skbuff_head_cache: Restoring Poison 0xffff00003e7c1400-0xffff00003e7c143f=0x6b
+[  251.737540] FIX skbuff_head_cache: Marking all objects used
+[  251.742471] skbuff: skb_over_panic: text:ffff8000809d1ed8 len:110 put:110 head:0000000000000000 data:0000000000000000 tail:0x6e end:0x0 dev:<NULL>
+[  251.750148] ------------[ cut here ]------------
+[  251.753898] kernel BUG at net/core/skbuff.c:210!
+[  251.757650] Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+[  251.761358] Modules linked in: pppoe ppp_async nft_fib_inet nf_flow_table_inet wireguard scsc_wlan(O) scsc_mx(O) pppox ppp_generic nft_reject_ipv6 nft_reject_ipv4 nft_reject_inet nft_reject nft_redir nft_quota nft_numgen nft_nat nft_masq nft_log nft_limit nft_hash nft_flow_offload nft_fib_ipv6 nft_fib_ipv4 nft_fib nft_ct nft_chain_nat nf_tables nf_nat nf_flow_table nf_conntrack libchacha20poly1305 chacha_neon cfg80211(O) slhc scsc_platform_mif(O) poly1305_neon nfnetlink nf_reject_ipv6 nf_reject_ipv4 nf_log_syslog nf_defrag_ipv6 nf_defrag_ipv4 libcurve25519_generic libchacha crc_ccitt compat(O) ip6_udp_tunnel udp_tunnel
+[  251.787462] CPU: 0 UID: 0 PID: 109 Comm: irq/66-dwc3 Tainted: G    B   W  O       6.12.112 #0
+[  251.794865] Tainted: [B]=BAD_PAGE, [W]=WARN, [O]=OOT_MODULE
+[  251.798566] Hardware name: Samsung Galaxy J4 (DT)
+[  251.802281] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  251.805963] pc : skb_panic+0x50/0x54
+[  251.809654] lr : skb_panic+0x50/0x54
+[  251.813244] sp : ffff8000827fbc20
+[  251.816800] x29: ffff8000827fbc30 x28: 0000000000000fe0 x27: ffff000002676cc0
+[  251.820429] x26: ffff000002676c00 x25: ffff8000827fbdac x24: 0000000000000000
+[  251.824024] x23: ffff0000027819a8 x22: ffff000000e80cc0 x21: 0000000000000000
+[  251.827549] x20: ffff000000d38980 x19: ffff00003e7c0f40 x18: ffff8000827fb83f
+[  251.831114] x17: 0000000000000003 x16: ffff800081905db0 x15: ffff8000827fb670
+[  251.834653] x14: 0000000000000005 x13: 00060024000800b3 x12: ffff8000815140f8
+[  251.838112] x11: 0000000000000364 x10: ffff8000815140f8 x9 : 0000000000000058
+[  251.841582] x8 : 0000000000000018 x7 : ffff8000815140f8 x6 : 0000000000000365
+[  251.844950] x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000000000000
+[  251.848323] x2 : ffff00007bba78a0 x1 : ffff000001339f80 x0 : 0000000000000086
+[  251.851652] Call trace:
+[  251.854865]  skb_panic+0x50/0x54
+[  251.858038]  skb_find_text+0x0/0xf4
+[  251.861203]  rx_complete+0xb8/0x24c
+[  251.864292]  usb_gadget_giveback_request+0x14/0x20
+[  251.867385]  dwc3_gadget_giveback+0xb4/0xf0
+[  251.870515]  dwc3_gadget_endpoint_trbs_complete+0x140/0x3a0
+[  251.873592]  dwc3_thread_interrupt+0x3b0/0xb7c
+[  251.876638]  irq_thread_fn+0x2c/0xa8
+[  251.879755]  irq_thread+0x164/0x2d4
+[  251.882808]  kthread+0x110/0x120
+[  251.885843]  ret_from_fork+0x10/0x20
+[  251.888910] Code: 29572107 9a8a0129 a90027e8 97ffa53b (d4210000) 
+[  251.891965] ---[ end trace 0000000000000000 ]---
+[  251.913971] Kernel panic - not syncing: Oops - BUG: Fatal exception in interrupt
+[  251.917118] SMP: stopping secondary CPUs
+[  251.920258] Kernel Offset: disabled
+[  251.923328] CPU features: 0x00,00000080,00200000,0200421b
+[  251.926441] Memory Limit: none
+[  251.948359] Rebooting in 3 seconds..
+
+ECC: No errors detected
