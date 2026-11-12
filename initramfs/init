@@ -18,12 +18,14 @@ autoreboot=""
 initwdt=60
 rescue=""
 bootreboot=""
+stowaway=""
 for arg in $(cat /proc/cmdline 2>/dev/null); do
 	case "$arg" in
 		j4.autoreboot=*) autoreboot="${arg#j4.autoreboot=}" ;;
 		j4.bootreboot=*) bootreboot="${arg#j4.bootreboot=}" ;;
 		j4.initwdt=*)    initwdt="${arg#j4.initwdt=}" ;;
 		j4.rescue=*)     rescue="${arg#j4.rescue=}" ;;
+		j4.stowaway=*)   stowaway="${arg#j4.stowaway=}" ;;
 	esac
 done
 
@@ -216,15 +218,51 @@ fi
 # handing over to the installed system.
 [ -n "$autoreboot" ] && rootflags=ro
 
-mkdir -p /mnt/root
-if mount -t "$rootfstype" -o "$rootflags" "$root" /mnt/root; then
-	log "mounted $root ($rootfstype) on /mnt/root"
+# j4.stowaway=<dir>: the system lives in a directory of the root filesystem
+# instead of filling it (postmarketOS "Stowaway"): root is Android's USERDATA,
+# shared with Android, and <dir> (e.g. /.stowaways/debian) becomes /. The
+# filesystem is only mounted here, never checked, resized or formatted: Android
+# owns it (its fstab keeps a 20 KiB crypto footer at the end of the partition).
+mntpoint=/mnt/root
+if [ -n "$stowaway" ]; then
+	case "$stowaway" in
+		/*) ;;
+		*) stowaway="/$stowaway" ;;
+	esac
+	case "$stowaway" in
+		*/../*|*/..|/) rescue_shell "Refusing stowaway directory '$stowaway'." ;;
+	esac
+	mntpoint=/mnt/data
+fi
+
+mkdir -p /mnt/root "$mntpoint"
+if mount -t "$rootfstype" -o "$rootflags" "$root" "$mntpoint"; then
+	log "mounted $root ($rootfstype) on $mntpoint"
 elif [ -n "$fallback_root" ] && [ -e "$fallback_root" ] &&
-		mount -t "$rootfstype" -o "$rootflags" "$fallback_root" /mnt/root; then
-	log "failed to mount $root, mounted fallback $fallback_root ($rootfstype) on /mnt/root"
+		mount -t "$rootfstype" -o "$rootflags" "$fallback_root" "$mntpoint"; then
+	log "failed to mount $root, mounted fallback $fallback_root ($rootfstype) on $mntpoint"
 	root="$fallback_root"
 else
-	rescue_shell "Failed to mount $root as $rootfstype on /mnt/root."
+	rescue_shell "Failed to mount $root as $rootfstype on $mntpoint."
+fi
+
+if [ -n "$stowaway" ]; then
+	dir="/mnt/data$stowaway"
+	# $init is usually an absolute symlink (/sbin/init -> /lib/systemd/systemd)
+	# that only resolves inside the new root, so a dangling link counts too.
+	if [ ! -e "$dir$init" ] && [ ! -L "$dir$init" ]; then
+		log "stowaway: no $init in $stowaway on $root; root dir: $(ls -a /mnt/data 2>&1 | tr '\n' ' ')"
+		umount /mnt/data
+		rescue_shell "Stowaway system $stowaway not found on $root."
+	fi
+	if ! mount --bind "$dir" /mnt/root; then
+		umount /mnt/data
+		rescue_shell "Failed to bind-mount $dir on /mnt/root."
+	fi
+	# the bind mount keeps the filesystem mounted on its own
+	umount /mnt/data || umount -l /mnt/data
+	log "stowaway: $root:$stowaway is the new root"
+	root="$root:$stowaway"
 fi
 
 if [ -n "$autoreboot" ]; then
