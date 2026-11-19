@@ -4,7 +4,10 @@
 #
 # entry: (kind, downstream name, mainline name or None for the automatic one, flags)
 #   kind  : pll | mux | ffac | div | gate | frat
-#   flags : gate only - 'rate' = CLK_SET_RATE_PARENT, 'crit' = CLK_IS_CRITICAL
+#   flags : gate - 'rate' = CLK_SET_RATE_PARENT, 'crit' = CLK_IS_CRITICAL
+#           mux  - 'rate' = CLK_SET_RATE_PARENT, 'recalc' = CLK_RECALC_NEW_RATES
+#           div  - 'ro'   = read-only divider (CLK_DIVIDER_READ_ONLY, rate not cached)
+#           pll  - 'table:<name>' = rate table <name> (written by hand in gen.py)
 
 CMUS = {
     'mif':  dict(base=0x10460000, compat='samsung,exynos7570-cmu-mif'),
@@ -12,7 +15,11 @@ CMUS = {
     'peri': dict(base=0x101f0000, compat='samsung,exynos7570-cmu-peri'),
     'dispaud': dict(base=0x148d0000, compat='samsung,exynos7570-cmu-dispaud'),
     'g3d':  dict(base=0x11460000, compat='samsung,exynos7570-cmu-g3d'),
+    'cpucl0': dict(base=0x10900000, compat='samsung,exynos7570-cmu-cpucl0'),
 }
+
+# Clock ids that are not one of the downstream clocks (registered by hand)
+EXTRA_IDS = {'cpucl0': ['cpucl0_cpu']}
 
 EXTERNAL = {
     'OSCCLK': 'oscclk',
@@ -31,7 +38,7 @@ MIF_CMU_CLOCKS = [          # CLKCMU_<x>: mux -> div -> gate towards other CMUs
     'DISPAUD_BUS', 'DISPAUD_DECON_INT_VCLK',
 ]
 
-SPEC = {'mif': [], 'fsys': [], 'peri': [], 'dispaud': [], 'g3d': []}
+SPEC = {'mif': [], 'fsys': [], 'peri': [], 'dispaud': [], 'g3d': [], 'cpucl0': []}
 
 m = SPEC['mif']
 for n in (0, 1, 2):
@@ -63,6 +70,12 @@ m += [
     ('mux', 'MIF_MUX_CLKCMU_G3D', None, ''),
     ('div', 'MIF_DIV_CLKCMU_G3D', None, ''),
     ('gate', 'MIF_GATE_CLKCMU_G3D', None, 'rate'),
+]
+# CLKCMU_CPUCL0_SWITCH (SHARED0_PLL/2 and a divider), the CPU clock while the
+# CPU PLL relocks; the CPU clock code sets its divider. Last again for the ids.
+m += [
+    ('div', 'MIF_DIV_CLKCMU_CPUCL0_SWITCH', None, ''),
+    ('gate', 'MIF_GATE_CLKCMU_CPUCL0_SWITCH', None, 'rate'),
 ]
 
 f = SPEC['fsys']
@@ -126,6 +139,10 @@ for ds, name, fl in [
     ('GPIO_ESE_IPCLKPORT_PCLK', 'gout_peri_gpio_ese_pclk', 'crit'),
     ('SFRIF_GPIO_ALIVE_IPCLKPORT_PCLK', 'gout_peri_gpio_alive_pclk', 'crit'),
     ('SYSREG_PERI_IPCLKPORT_PCLK', 'gout_peri_sysreg_pclk', 'crit'),
+    # TMU (CPUCL0 and G3D sensors in one block): register clock and the
+    # sensor clock. Last so the ids above stay.
+    ('SFRIF_TMU_CPUCL0_IPCLKPORT_PCLK', 'gout_peri_tmu_pclk', 'rate'),
+    ('TMU_CPUCL0_IPCLKPORT_I_CLK', 'gout_peri_tmu_clk', ''),
 ]:
     p.append(('gate', 'PERI_GATE_CLK_PERI_UID_' + ds, name, fl))
 
@@ -172,3 +189,28 @@ g = SPEC['g3d'] = [
     ('div', 'G3D_DIV_CLK_G3D_APB', 'dout_g3d_apb', ''),
     ('gate', 'G3D_GATE_CLK_G3D_UID_G3D_IPCLKPORT_CLK', 'gout_g3d_clk', 'rate'),
 ]
+
+# CMU_CPUCL0 (0x10900000): the Cortex-A53 cluster. The CPU clock
+# (CLK_CPUCL0_CPU, CPUCLK_LAYOUT_E7570 in clk-cpu.c) changes the PLL rate and
+# flips MUX_CLK_CPUCL0 to the switch path around it. The cluster dividers are
+# the same at every ECT DVFS level, registered read-only.
+c = SPEC['cpucl0']
+c += [
+    ('pll', 'CPUCL0_PLL', 'fout_cpucl0_pll', 'table:cpucl0_pll_rates'),
+    ('mux', 'CPUCL0_MUX_CPUCL0_PLL', 'mout_cpucl0_pll', 'rate recalc'),
+    ('mux', 'CPUCL0_MUX_CLKCMU_CPUCL0_SWITCH_USER', 'mout_cpucl0_switch_user', 'rate'),
+    ('mux', 'CPUCL0_MUX_CLK_CPUCL0', 'mout_cpucl0_cpu', ''),
+]
+for ds, name in [
+    ('CPUCL0_DIV_CLK_CPUCL0_1', 'dout_cpucl0_1'),
+    ('CPUCL0_DIV_CLK_CPUCL0_2', 'dout_cpucl0_2'),
+    ('CPUCL0_DIV_CLK_CPUCL0_ACLK', 'dout_cpucl0_aclk'),
+    ('CPUCL0_DIV_CLK_CPUCL0_PCLK', 'dout_cpucl0_pclk'),
+    ('CPUCL0_DIV_CLK_CPUCL0_ATCLK', 'dout_cpucl0_atclk'),
+    ('CPUCL0_DIV_CLK_CPUCL0_PCLKDBG', 'dout_cpucl0_pclkdbg'),
+    ('CPUCL0_DIV_CLK_CPUCL0_CNTCLK', 'dout_cpucl0_cntclk'),
+    ('CPUCL0_DIV_CLK_CPUCL0_RUN_MONITOR', 'dout_cpucl0_run_monitor'),
+    ('CPUCL0_DIV_CLK_CPUCL0_HPM', 'dout_cpucl0_hpm'),
+    ('CPUCL0_DIV_CLK_CPUCL0_PLL', 'dout_cpucl0_pll'),
+]:
+    c.append(('div', ds, name, 'ro'))
