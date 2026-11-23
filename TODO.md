@@ -1,63 +1,64 @@
-# TODO — mainline (linux-7.2.y) on the Galaxy J4 (Exynos7570)
+# TODO — mainline on the Galaxy J4 (Exynos7570)
 
-Status as of 2026-10-20.
+Status as of 2026-11-23. Main tree: `linux-6.12.y` (branch `exynos7570-6.12`), used by the
+stowaway Debian kernel (RECOVERY) and OpenWrt. `linux-7.2.y` lags behind (see below).
 
-## Missing drivers
-
-| Area | Status | Notes |
-|---|---|---|
-| GPU (Mali-T720) | **done** (2026-10-20) | Panfrost at a fixed 349 MHz. Phosh starts at boot and renders on it (verified after reboot, no llvmpipe); wlroots finds the display (card1) by itself. Left: OPP/devfreq on the shared BUCK1 rail (higher clocks), thermal. |
-| WiFi / Bluetooth (Samsung SCSC) | missing | No mainline driver; downstream uses the vendor SCSC stack. Port or new driver — big job. |
-| Modem / mobile data (Shannon) | missing | Needs the Samsung modem interface + shared-memory link driver. samsungipcd and the MM plugin would then work on top. |
-| Audio (cod9002x codec, audmixer, I2S) | missing | No mainline codec or machine driver. Speaker works on downstream. |
-| Cameras (FIMC-IS2, S5K3L2 / S5K5E3) | missing | Very large; downstream only works with the vendor stack. |
-| CPU frequency scaling / thermal | missing | CPUs run at whatever S-BOOT set, no DVFS. |
-| Suspend | not working | `rtcwake` suspend failed; s2idle untried. |
-| TC305K touch keys | not ported | |
-| Sensors, vibrator, NFC, LED/flash | not looked at | |
-| SD card (mmc2) | disabled in DT | Controller driver exists; enable and test. |
-| Video codec / scaler / JPEG | not done | |
-
-## Working but incomplete
-
-- Charger: works; end-of-charge and wireless-charging logic missing.
-- USB: device mode only (RNDIS/SSH); no host/OTG boost.
-- Display: works (DECON is card0/fb0, brightness OK). Still to test:
-  - blanking/idle past ~157 s (the SysMMU-suspend SError fix is untested under idle);
-  - cold start without the bootloader's picture.
-- Fuel gauge cycle counter: untested across full power-off and a real discharge.
-
-- uniLoader gzip kernel (`KERNEL_GZIP=1`): boots (2026-10-24, after building all of
-  uniLoader with `-mstrict-align`), but inflating is very slow. With the MMU off, every
-  data access is Device-type (uncached), and the decoder works byte by byte. Fix: in
-  uniLoader, enable the MMU with an identity map (DRAM as Normal cacheable) before
-  inflating, and clean/invalidate caches and turn it off again before jumping to the
-  kernel.
-
-## Open bugs
-
-- **Large `apt-get install` runs corrupt data on mainline** (biggest). Cause unknown;
-  suspects: HS400 under writeback, DMA cache coherency, reserved-memory overlap with
-  the secure world, CPU frequency/voltage left by S-BOOT.
-
-## OpenWrt / modem
-
-- **LTE band selection/locking** (asked 2026-10-25, wanted luci-app-modemband). That app
-  cannot work here: it needs a USB modem from obsy's `modemband` list driven by vendor AT
-  commands, and its README says it does not work alongside ModemManager. Our Shannon
-  modem speaks Samsung IPC through samsungipcd, which has no band AT commands. Plan:
-  decode the band-selection IPC message from the stock RIL (libsec-ril, same way as the
-  data-call layouts), add an AT command for it to samsungipcd, then a small LuCI page
-  or a modemband-style script on top.
-
-## Already working
+## Done on 6.12 (verified on the phone)
 
 4 CPU cores, clocks, pinctrl, PMIC (regulators, RTC, power key, charger, fuel gauge),
-eMMC incl. HS400, USB networking + SSH, touchscreen, display with brightness, ramoops,
-GPU (Panfrost), Phosh with hardware rendering (enabled at boot, phoc scale-to-fit on).
+eMMC incl. HS400, USB networking + SSH, touchscreen, DSI display, ramoops, GPU (Panfrost),
+modem + mobile data, WiFi (SCSC: STA, AP, repeater), Bluetooth (SCSC + BlueZ, up at boot),
+CPU DVFS 344.5-1430 MHz (+1586/1690 opt-in), TMU + CPU thermal zone, volume/home keys,
+TC305K recent/back touch keys, vibrator (regulator-haptic), accelerometer (LIS2DS12 with
+interrupt, mount matrix), front flash LED (KTD2692), ECT and firmware RAM reserved.
+Kernel configs tracked in `mainline-tools/configs/`.
 
-## Suggested next steps
+## Easy
 
-1. Audio.
-2. WiFi.
-3. GPU follow-ups: OPP/devfreq, thermal.
+- [ ] SD card slot (mmc2): enable, 2.8 V supply on gpa0-3, card detect. Needs a card to test.
+- [ ] OpenWrt: refresh `patches-6.12` and `config-6.12` with the 2026-11-23 commits and
+      options (I2C_GPIO, KEYBOARD_TM2_TOUCHKEY, INPUT_REGULATOR_HAPTIC,
+      IIO_ST_ACCEL_I2C_3AXIS, LEDS_KTD2692, BT + SCSC_BT_BLUEZ); BlueZ packages for BT.
+- [ ] Port the 2026-11-23 work to `linux-7.2.y` (keys, touch keys, vibrator, accelerometer,
+      flash LED, ECT, Bluetooth), plus 6.12-only WiFi, CPU DVFS and TMU.
+- [ ] Rebuild 7.2 with the 0x7e700000 reservation and re-test big `apt` runs (the data
+      corruption bug is probably that reservation — not re-tested).
+- [ ] Send upstream: st_accel LIS2DS12 axis-enable fix, st_accel LIS2DS12 ODR table fix,
+      ktd2692 writes with interrupts off.
+- [ ] Boot-test the 30 s Bluetooth firmware-wait build (`recovery-stowaway-bt6.img`,
+      flashed, not booted yet).
+
+## Medium
+
+- [ ] Bluetooth real use: pairing, A2DP headset (needs PipeWire/PulseAudio), file transfer,
+      a BLE device. Check whether "hci0: unexpected event for opcode 0x0000" at power-on
+      also happens downstream.
+- [ ] Rear flash LED: S2MPU06 PMIC flash block (downstream fimc-is-flash-i2c,
+      REG_FLED_CTRL0..4, torch 20-140 mA, flash 600 mA) — new LED driver.
+- [ ] Proximity/light sensor: Sharp GP2AP070S at i2c 0x39 (LDO22, irq gpa1-0) — no
+      mainline driver, new IIO driver.
+- [ ] Auto-rotate in Phosh: install iio-sensor-proxy (kernel side done).
+- [ ] Charger end-of-charge: implemented, never run through a real full charge.
+- [ ] Fuel gauge cycle counter: untested across full power-off and a real discharge.
+
+## Hard
+
+- [ ] cpuidle (core power-down) and suspend (`rtcwake` suspend failed; s2idle untried).
+      Idle runs at ~47 C with cores only in WFI and BUCK1 floor 825 mV — main idle heat.
+- [ ] Audio: cod9002x codec, audmixer, I2S, pl330 (speaker works on downstream).
+- [ ] Cameras: FIMC-IS2, S5K3L2 / S5K5E3 (work on downstream only via the j4cam path).
+- [ ] Display: brightness/blank via DRM, idle blanking, cold start without the
+      bootloader's picture.
+- [ ] GPU OPPs/devfreq (fixed 349 MHz), MIF/INT DVFS.
+- [ ] USB host/OTG with charge boost; jig/UART cables.
+- [ ] NFC: unknown whether the J400F has the chip (downstream DT lists pn547 and sec-nfc).
+- [ ] Video codec / scaler / JPEG.
+
+## Other
+
+- uniLoader gzip kernel (`KERNEL_GZIP=1`): boots, but inflating is very slow with the MMU
+  off (every access uncached, byte-by-byte decoder). Fix: identity-map DRAM as Normal
+  cacheable before inflating, clean/invalidate and turn the MMU off before the jump.
+- LTE band selection/locking (asked 2026-10-25): luci-app-modemband cannot work (needs
+  vendor AT commands, conflicts with ModemManager). Plan: decode the band-selection IPC
+  message from libsec-ril, add an AT command to samsungipcd, then a small LuCI page.
