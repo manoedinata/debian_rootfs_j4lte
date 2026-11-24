@@ -50,7 +50,7 @@ Kernel configs tracked in `mainline-tools/configs/`.
 - [ ] Suspend (`rtcwake` suspend failed; s2idle untried). Needs the downstream SYS_SLEEP PMU
       sequences, wakeup masks and driver suspend/resume (DECON/DSIM, SCSC, modem, USB).
 - [ ] Idle power (2026-11-24, charging inhibited, screen on, cores ~99 % powered down): ~337 mA
-      from the battery. WiFi connected ~87 mA despite `Power save: on` (fix first); BT ~0; CP not
+      from the battery, 258 mA after the SCSC power save fix (WiFi connected ~87 mA -> ~4 mA); BT ~0; CP not
       booted; GPU runtime-suspended; backlight level and charging change nothing. Remaining
       ~250 mA: display pipeline, bus/DRAM at boot clocks. Get a Lineage reference at the same
       settings before INT DVFS (medium) or MIF DVFS (hard: DREX/PHY timing switch, MIF pause

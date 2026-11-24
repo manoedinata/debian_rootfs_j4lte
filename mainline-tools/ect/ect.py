@@ -66,7 +66,7 @@ def dvfs(b):
         lv = [(u32(a + 8 * i), i32(a + 8 * i + 4)) for i in range(nl)]
         a += 8 * nl
         print('DVFS %s max=%d min=%d clocks=%s' % (name, mx, mn, clks))
-        if 'cpu' in name.lower():
+        if len(sys.argv) < 3 or sys.argv[2] in name:
             for i, (f, en) in enumerate(lv):
                 vals = [u32(a + 4 * (i * nc + k)) for k in range(nc)]
                 print('  L%-2d %7d en=%d %s' % (i, f, en, vals))
