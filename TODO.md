@@ -49,14 +49,17 @@ Kernel configs tracked in `mainline-tools/configs/`.
 
 - [ ] Suspend (`rtcwake` suspend failed; s2idle untried). Needs the downstream SYS_SLEEP PMU
       sequences, wakeup masks and driver suspend/resume (DECON/DSIM, SCSC, modem, USB).
-- [ ] Idle heat: core power-down works (~99 % of idle) but the thermal zone stayed ~48 C
-      (was 49 C; measured while charging over USB, cpufreq at 1.1-1.3 GHz). Look at idle
-      cpufreq, BUCK1 floor 825 mV, SICD (downstream system idle).
+- [ ] Idle power (2026-11-24, charging inhibited, screen on, cores ~99 % powered down): ~337 mA
+      from the battery. WiFi connected ~87 mA despite `Power save: on` (fix first); BT ~0; CP not
+      booted; GPU runtime-suspended; backlight level and charging change nothing. Remaining
+      ~250 mA: display pipeline, bus/DRAM at boot clocks. Get a Lineage reference at the same
+      settings before INT DVFS (medium) or MIF DVFS (hard: DREX/PHY timing switch, MIF pause
+      with CP; BUCK1 floor 825 mV stays, so only dynamic power is saved).
 - [ ] Audio: cod9002x codec, audmixer, I2S, pl330 (speaker works on downstream).
 - [ ] Cameras: FIMC-IS2, S5K3L2 / S5K5E3 (work on downstream only via the j4cam path).
 - [ ] Display: brightness/blank via DRM, idle blanking, cold start without the
       bootloader's picture.
-- [ ] GPU OPPs/devfreq (fixed 349 MHz), MIF/INT DVFS.
+- [ ] GPU OPPs/devfreq (fixed 349 MHz), MIF/INT DVFS (see idle power above).
 - [ ] USB host/OTG with charge boost; jig/UART cables.
 - [ ] NFC: unknown whether the J400F has the chip (downstream DT lists pn547 and sec-nfc).
 - [ ] Video codec / scaler / JPEG.
