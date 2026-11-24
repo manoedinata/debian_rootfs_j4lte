@@ -11,7 +11,8 @@ modem + mobile data, WiFi (SCSC: STA, AP, repeater), Bluetooth (SCSC + BlueZ, up
 CPU DVFS 344.5-1430 MHz (+1586/1690 opt-in), TMU + CPU thermal zone, volume/home keys,
 TC305K recent/back touch keys, vibrator (regulator-haptic), accelerometer (LIS2DS12 with
 interrupt, mount matrix), front flash LED (KTD2692), rear flash LED (S2MPU06 flash block:
-torch 20-160 mA, 600 mA flash), proximity sensor (GP2AP070S, IIO with near/far events), ECT and firmware RAM reserved.
+torch 20-160 mA, 600 mA flash), proximity sensor (GP2AP070S, IIO with near/far events), cpuidle core power-down (PSCI +
+PMU lpm_init CPU settings, MCT as per-CPU wakeup timer), ECT and firmware RAM reserved.
 Kernel configs tracked in `mainline-tools/configs/`.
 
 ## Easy
@@ -46,8 +47,11 @@ Kernel configs tracked in `mainline-tools/configs/`.
 
 ## Hard
 
-- [ ] cpuidle (core power-down) and suspend (`rtcwake` suspend failed; s2idle untried).
-      Idle runs at ~47 C with cores only in WFI and BUCK1 floor 825 mV — main idle heat.
+- [ ] Suspend (`rtcwake` suspend failed; s2idle untried). Needs the downstream SYS_SLEEP PMU
+      sequences, wakeup masks and driver suspend/resume (DECON/DSIM, SCSC, modem, USB).
+- [ ] Idle heat: core power-down works (~99 % of idle) but the thermal zone stayed ~48 C
+      (was 49 C; measured while charging over USB, cpufreq at 1.1-1.3 GHz). Look at idle
+      cpufreq, BUCK1 floor 825 mV, SICD (downstream system idle).
 - [ ] Audio: cod9002x codec, audmixer, I2S, pl330 (speaker works on downstream).
 - [ ] Cameras: FIMC-IS2, S5K3L2 / S5K5E3 (work on downstream only via the j4cam path).
 - [ ] Display: brightness/blank via DRM, idle blanking, cold start without the
