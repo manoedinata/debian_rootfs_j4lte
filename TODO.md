@@ -1,6 +1,6 @@
 # TODO — mainline on the Galaxy J4 (Exynos7570)
 
-Status as of 2026-11-23. Main tree: `linux-6.12.y` (branch `exynos7570-6.12`), used by the
+Status as of 2026-11-24. Main tree: `linux-6.12.y` (branch `exynos7570-6.12`), used by the
 stowaway Debian kernel (RECOVERY) and OpenWrt. `linux-7.2.y` lags behind (see below).
 
 ## Done on 6.12 (verified on the phone)
@@ -10,36 +10,39 @@ eMMC incl. HS400, USB networking + SSH, touchscreen, DSI display, ramoops, GPU (
 modem + mobile data, WiFi (SCSC: STA, AP, repeater), Bluetooth (SCSC + BlueZ, up at boot),
 CPU DVFS 344.5-1430 MHz (+1586/1690 opt-in), TMU + CPU thermal zone, volume/home keys,
 TC305K recent/back touch keys, vibrator (regulator-haptic), accelerometer (LIS2DS12 with
-interrupt, mount matrix), front flash LED (KTD2692), ECT and firmware RAM reserved.
+interrupt, mount matrix), front flash LED (KTD2692), rear flash LED (S2MPU06 flash block:
+torch 20-160 mA, 600 mA flash), proximity sensor (GP2AP070S, IIO with near/far events), ECT and firmware RAM reserved.
 Kernel configs tracked in `mainline-tools/configs/`.
 
 ## Easy
 
 - [ ] SD card slot (mmc2): enable, 2.8 V supply on gpa0-3, card detect. Needs a card to test.
-- [ ] OpenWrt: refresh `patches-6.12` and `config-6.12` with the 2026-11-23 commits and
-      options (I2C_GPIO, KEYBOARD_TM2_TOUCHKEY, INPUT_REGULATOR_HAPTIC,
-      IIO_ST_ACCEL_I2C_3AXIS, LEDS_KTD2692, BT + SCSC_BT_BLUEZ); BlueZ packages for BT.
-- [ ] Port the 2026-11-23 work to `linux-7.2.y` (keys, touch keys, vibrator, accelerometer,
-      flash LED, ECT, Bluetooth), plus 6.12-only WiFi, CPU DVFS and TMU.
-- [ ] Rebuild 7.2 with the 0x7e700000 reservation and re-test big `apt` runs (the data
-      corruption bug is probably that reservation — not re-tested).
-- [ ] Send upstream: st_accel LIS2DS12 axis-enable fix, st_accel LIS2DS12 ODR table fix,
-      ktd2692 writes with interrupts off.
-- [ ] Boot-test the 30 s Bluetooth firmware-wait build (`recovery-stowaway-bt6.img`,
-      flashed, not booted yet).
 
 ## Medium
 
+- [ ] Auto-rotate and proximity in Phosh: install iio-sensor-proxy (kernel side done).
+
+## Untested
+
+- [ ] Boot-test the 30 s Bluetooth firmware-wait build (`recovery-stowaway-bt6.img`,
+      flashed, not booted yet).
 - [ ] Bluetooth real use: pairing, A2DP headset (needs PipeWire/PulseAudio), file transfer,
       a BLE device. Check whether "hci0: unexpected event for opcode 0x0000" at power-on
       also happens downstream.
-- [ ] Rear flash LED: S2MPU06 PMIC flash block (downstream fimc-is-flash-i2c,
-      REG_FLED_CTRL0..4, torch 20-140 mA, flash 600 mA) — new LED driver.
-- [ ] Proximity/light sensor: Sharp GP2AP070S at i2c 0x39 (LDO22, irq gpa1-0) — no
-      mainline driver, new IIO driver.
-- [ ] Auto-rotate in Phosh: install iio-sensor-proxy (kernel side done).
 - [ ] Charger end-of-charge: implemented, never run through a real full charge.
 - [ ] Fuel gauge cycle counter: untested across full power-off and a real discharge.
+- [ ] 7.2: rebuild with the 0x7e700000 reservation and re-test big `apt` runs (the data
+      corruption bug is probably that reservation — not re-tested).
+
+## Porting / packaging / upstream
+
+- [ ] OpenWrt: refresh `patches-6.12` and `config-6.12` with the 2026-11-23 commits and
+      options (I2C_GPIO, KEYBOARD_TM2_TOUCHKEY, INPUT_REGULATOR_HAPTIC,
+      IIO_ST_ACCEL_I2C_3AXIS, LEDS_KTD2692, LEDS_S2MPU06, GP2AP070S, BT + SCSC_BT_BLUEZ); BlueZ packages for BT.
+- [ ] Port the 2026-11-23/24 work to `linux-7.2.y` (keys, touch keys, vibrator, accelerometer,
+      flash LEDs, proximity, ECT, Bluetooth), plus 6.12-only WiFi, CPU DVFS and TMU.
+- [ ] Send upstream: st_accel LIS2DS12 axis-enable fix, st_accel LIS2DS12 ODR table fix,
+      ktd2692 writes with interrupts off.
 
 ## Hard
 
